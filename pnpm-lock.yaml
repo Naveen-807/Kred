@@ -20,6 +20,9 @@ importers:
       prettier-plugin-solidity:
         specifier: ^2.1.0
         version: 2.1.0(prettier@3.6.2)
+      tsx:
+        specifier: ^4.20.6
+        version: 4.20.6
       turbo:
         specifier: ^2.1.3
         version: 2.5.8
