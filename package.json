@@ -1,0 +1,45 @@
+{
+  "name": "offlinepay",
+  "private": true,
+  "version": "1.0.0",
+  "description": "OfflinePay monorepo",
+  "scripts": {
+    "dev:backend": "pnpm --filter backend dev",
+    "dev:ai": "pnpm --filter ai-agent dev",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test"
+  },
+  "workspaces": [
+    "backend",
+    "contracts",
+    "vincent-ability",
+    "ai-agent"
+  ],
+  "contributors": [
+    "OfflinePay Team"
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "sms",
+    "defi",
+    "hedera",
+    "vincent",
+    "ai"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.11",
+    "dotenv": "^16.6.1",
+    "prettier": "^3.6.2",
+    "prettier-plugin-solidity": "^2.1.0",
+    "turbo": "^2.1.3"
+  },
+  "packageManager": "pnpm@10.18.3"
+}
