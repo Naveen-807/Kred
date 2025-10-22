@@ -15,9 +15,8 @@ export async function generateOtp(): Promise<OtpResult> {
   let otp = "";
 
   // Pyth Entropy for secure random OTP
-  // Note: Using crypto.randomInt as Pyth Entropy API endpoint needs proper configuration
-  // In production, integrate with Pyth Entropy for verifiable randomness
-  if (config.pyth.entropyApiUrl && false) { // Disabled until proper endpoint configured
+  // Using Pyth Entropy for verifiable randomness
+  if (config.pyth.entropyApiUrl) {
     try {
       const response = await axios.post(
         `${config.pyth.entropyApiUrl}/v1/otp`,
