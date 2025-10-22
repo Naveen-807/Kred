@@ -1,8 +1,8 @@
-import express from "express";
+import express, { Router } from "express";
 import { logger } from "../utils/logger.js";
 import { handleMissedCall } from "../modules/vincent/invisibleOnboarding.js";
 
-export const voiceRouter = express.Router();
+export const voiceRouter: Router = express.Router();
 
 // REVOLUTIONARY FEATURE: Invisible Onboarding via Missed Call
 // User makes a missed call → Wallet created → SMS confirmation

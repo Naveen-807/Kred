@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 
 import { parseCommand } from "../modules/commands/parser.js";
 import { executeCommand } from "../modules/commands/commandExecutor.js";
@@ -6,7 +6,7 @@ import { templates } from "../modules/sms/templates.js";
 import { sendSms } from "../services/msg91Client.js";
 import { logger } from "../utils/logger.js";
 
-export const smsRouter = express.Router();
+export const smsRouter: Router = express.Router();
 
 smsRouter.post("/", async (req, res) => {
   // Trim and ensure proper phone number format
