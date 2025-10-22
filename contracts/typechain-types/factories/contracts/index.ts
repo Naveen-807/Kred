@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ProofOfCommerceSBT__factory } from "./ProofOfCommerceSBT__factory";
+export { PythEntropyOTP__factory } from "./PythEntropyOTP__factory";

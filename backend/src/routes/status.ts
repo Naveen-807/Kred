@@ -1,8 +1,8 @@
-import express, { Router } from "express";
+import express from "express";
 
 import { logger } from "../utils/logger.js";
 
-export const statusRouter: Router = express.Router();
+export const statusRouter = express.Router();
 
 statusRouter.post("/", (req, res) => {
   logger.info({ status: req.body }, "Twilio status callback");

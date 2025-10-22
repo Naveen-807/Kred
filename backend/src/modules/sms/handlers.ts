@@ -8,7 +8,7 @@ import {
   setPendingCommand,
   updateSessionState
 } from "../auth/sessionService.js";
-import { generateOtp } from "../auth/otpService.js";
+import { generateOtp, generateOtpOnChain } from "../auth/otpService.js";
 import { hashPin, verifyPin } from "../auth/pinService.js";
 
 import { sendGenericSms } from "./sender.js";
@@ -30,10 +30,16 @@ export async function initiateCommandWithOtp(
   phoneNumber: string,
   command: Record<string, unknown>
 ) {
-  const { otp, expiresAt } = await generateOtp();
+  const { otp, expiresAt, isOnChain } = await generateOtpOnChain(phoneNumber);
   await setPendingCommand(phoneNumber, command);
   await setOtp(phoneNumber, otp, expiresAt);
-  await sendGenericSms(phoneNumber, templates.otp(otp));
+  
+  // Send OTP with indicator of on-chain generation
+  const otpMessage = isOnChain 
+    ? `${templates.otp(otp)}\n✅ Pyth Entropy Secured`
+    : templates.otp(otp);
+  
+  await sendGenericSms(phoneNumber, otpMessage);
   await sendGenericSms(phoneNumber, templates.pinPrompt());
 }
 

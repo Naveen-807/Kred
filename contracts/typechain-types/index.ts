@@ -3,6 +3,8 @@
 /* eslint-disable */
 import type * as openzeppelin from "./@openzeppelin";
 export type { openzeppelin };
+import type * as pythnetwork from "./@pythnetwork";
+export type { pythnetwork };
 import type * as contracts from "./contracts";
 export type { contracts };
 export * as factories from "./factories";
@@ -32,5 +34,17 @@ export type { SafeCast } from "./@openzeppelin/contracts/utils/math/SafeCast";
 export { SafeCast__factory } from "./factories/@openzeppelin/contracts/utils/math/SafeCast__factory";
 export type { Strings } from "./@openzeppelin/contracts/utils/Strings";
 export { Strings__factory } from "./factories/@openzeppelin/contracts/utils/Strings__factory";
+export type { EntropyEvents } from "./@pythnetwork/entropy-sdk-solidity/EntropyEvents";
+export { EntropyEvents__factory } from "./factories/@pythnetwork/entropy-sdk-solidity/EntropyEvents__factory";
+export type { EntropyEventsV2 } from "./@pythnetwork/entropy-sdk-solidity/EntropyEventsV2";
+export { EntropyEventsV2__factory } from "./factories/@pythnetwork/entropy-sdk-solidity/EntropyEventsV2__factory";
+export type { IEntropy } from "./@pythnetwork/entropy-sdk-solidity/IEntropy";
+export { IEntropy__factory } from "./factories/@pythnetwork/entropy-sdk-solidity/IEntropy__factory";
+export type { IEntropyConsumer } from "./@pythnetwork/entropy-sdk-solidity/IEntropyConsumer";
+export { IEntropyConsumer__factory } from "./factories/@pythnetwork/entropy-sdk-solidity/IEntropyConsumer__factory";
+export type { IEntropyV2 } from "./@pythnetwork/entropy-sdk-solidity/IEntropyV2";
+export { IEntropyV2__factory } from "./factories/@pythnetwork/entropy-sdk-solidity/IEntropyV2__factory";
 export type { ProofOfCommerceSBT } from "./contracts/ProofOfCommerceSBT";
 export { ProofOfCommerceSBT__factory } from "./factories/contracts/ProofOfCommerceSBT__factory";
+export type { PythEntropyOTP } from "./contracts/PythEntropyOTP";
+export { PythEntropyOTP__factory } from "./factories/contracts/PythEntropyOTP__factory";

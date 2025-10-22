@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { ProofOfCommerceSBT } from "./ProofOfCommerceSBT";
+export type { PythEntropyOTP } from "./PythEntropyOTP";

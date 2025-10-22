@@ -34,7 +34,7 @@ importers:
         version: 0.6.0
       axios:
         specifier: ^1.7.7
-        version: 1.12.2
+        version: 1.12.2(debug@4.4.1)
       dotenv:
         specifier: ^16.4.5
         version: 16.6.1
@@ -84,6 +84,9 @@ importers:
       '@lit-protocol/constants':
         specifier: ^8.0.3
         version: 8.0.3(typescript@5.9.3)
+      '@lit-protocol/contracts-sdk':
+        specifier: ^7.3.1
+        version: 7.3.1(typescript@5.9.3)
       '@lit-protocol/lit-node-client':
         specifier: ^7.3.1
         version: 7.3.1(typescript@5.9.3)
@@ -223,6 +226,9 @@ importers:
       '@openzeppelin/contracts':
         specifier: ^5.1.0
         version: 5.4.0
+      '@pythnetwork/entropy-sdk-solidity':
+        specifier: ^2.1.0
+        version: 2.1.0
     devDependencies:
       '@nomicfoundation/hardhat-ethers':
         specifier: ^3.0.5
@@ -2515,6 +2521,9 @@ packages:
 
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
+
+  '@pythnetwork/entropy-sdk-solidity@2.1.0':
+    resolution: {integrity: sha512-V6Xjrvr1/5rURA1A4YikwRGSpva0irKETTeUD3iP0KYuZUaS1K3TadMj2onPyxnMiMjaGorC6THQH+AGfFwcWQ==}
 
   '@pythnetwork/price-service-client@1.9.0':
     resolution: {integrity: sha512-SLm3IFcfmy9iMqHeT4Ih6qMNZhJEefY14T9yTlpsH2D/FE5+BaGGnfcexUifVlfH6M7mwRC4hEFdNvZ6ebZjJg==}
@@ -12113,6 +12122,8 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
+  '@pythnetwork/entropy-sdk-solidity@2.1.0': {}
+
   '@pythnetwork/price-service-client@1.9.0(debug@4.4.1)':
     dependencies:
       '@pythnetwork/price-service-sdk': 1.8.0
@@ -13787,14 +13798,6 @@ snapshots:
       '@babel/runtime': 7.28.4
       is-retry-allowed: 2.2.0
 
-  axios@1.12.2:
-    dependencies:
-      follow-redirects: 1.15.11(debug@4.4.3)
-      form-data: 4.0.4
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
-
   axios@1.12.2(debug@4.4.1):
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.1)
@@ -15372,7 +15375,7 @@ snapshots:
   eth-gas-reporter@0.2.27:
     dependencies:
       '@solidity-parser/parser': 0.14.5
-      axios: 1.12.2
+      axios: 1.12.2(debug@4.4.1)
       cli-table3: 0.5.1
       colors: 1.4.0
       ethereum-cryptography: 1.2.0
@@ -17810,7 +17813,7 @@ snapshots:
       '@yarnpkg/lockfile': 1.1.0
       '@yarnpkg/parsers': 3.0.2
       '@zkochan/js-yaml': 0.0.7
-      axios: 1.12.2
+      axios: 1.12.2(debug@4.4.1)
       chalk: 4.1.2
       cli-cursor: 3.1.0
       cli-spinners: 2.6.1

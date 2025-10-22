@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsup src/server.ts --dts --sourcemap",
+    "build": "tsup src/server.ts --sourcemap",
     "start": "node dist/server.cjs",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "test": "vitest"
@@ -15,6 +15,7 @@
     "@google/generative-ai": "^0.6.0",
     "@hashgraph/sdk": "^2.75.0",
     "@lit-protocol/constants": "^8.0.3",
+    "@lit-protocol/contracts-sdk": "^7.3.1",
     "@lit-protocol/lit-node-client": "^7.3.1",
     "@lit-protocol/pkp-ethers": "^7.3.1",
     "@lit-protocol/vincent-sdk": "^0.0.7",

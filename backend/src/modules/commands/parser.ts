@@ -66,8 +66,8 @@ const SET_PIN_REGEX = /^SET\s+PIN\s+(?<pin>\d{4})$/i;
 const PIN_ENTRY_REGEX = /^(?<pin>\d{4})$/;
 const RESET_PATTERN = /^RESET$/i;
 
-const HELP_PATTERN = /^(HELP|MENU)$/i;
-const BALANCE_PATTERN = /^BALANCE$/i;
+const HELP_PATTERN = /^(HELP|MENU|\?)$/i;
+const BALANCE_PATTERN = /^(BALANCE|BAL)$/i;
 const STATUS_PATTERN = /^STATUS$/i;
 const ACCEPT_PATTERN = /^ACCEPT$/i;
 const MERCHANT_REPORT_PATTERN = /^REPORT$/i;

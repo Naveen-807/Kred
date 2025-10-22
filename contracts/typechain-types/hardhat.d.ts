@@ -66,9 +66,33 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Strings__factory>;
     getContractFactory(
+      name: "EntropyEvents",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.EntropyEvents__factory>;
+    getContractFactory(
+      name: "EntropyEventsV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.EntropyEventsV2__factory>;
+    getContractFactory(
+      name: "IEntropy",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IEntropy__factory>;
+    getContractFactory(
+      name: "IEntropyConsumer",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IEntropyConsumer__factory>;
+    getContractFactory(
+      name: "IEntropyV2",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IEntropyV2__factory>;
+    getContractFactory(
       name: "ProofOfCommerceSBT",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ProofOfCommerceSBT__factory>;
+    getContractFactory(
+      name: "PythEntropyOTP",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.PythEntropyOTP__factory>;
 
     getContractAt(
       name: "AccessControl",
@@ -136,10 +160,40 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.Strings>;
     getContractAt(
+      name: "EntropyEvents",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.EntropyEvents>;
+    getContractAt(
+      name: "EntropyEventsV2",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.EntropyEventsV2>;
+    getContractAt(
+      name: "IEntropy",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IEntropy>;
+    getContractAt(
+      name: "IEntropyConsumer",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IEntropyConsumer>;
+    getContractAt(
+      name: "IEntropyV2",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IEntropyV2>;
+    getContractAt(
       name: "ProofOfCommerceSBT",
       address: string | ethers.Addressable,
       signer?: ethers.Signer
     ): Promise<Contracts.ProofOfCommerceSBT>;
+    getContractAt(
+      name: "PythEntropyOTP",
+      address: string | ethers.Addressable,
+      signer?: ethers.Signer
+    ): Promise<Contracts.PythEntropyOTP>;
 
     deployContract(
       name: "AccessControl",
@@ -194,9 +248,33 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Strings>;
     deployContract(
+      name: "EntropyEvents",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.EntropyEvents>;
+    deployContract(
+      name: "EntropyEventsV2",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.EntropyEventsV2>;
+    deployContract(
+      name: "IEntropy",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IEntropy>;
+    deployContract(
+      name: "IEntropyConsumer",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IEntropyConsumer>;
+    deployContract(
+      name: "IEntropyV2",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IEntropyV2>;
+    deployContract(
       name: "ProofOfCommerceSBT",
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ProofOfCommerceSBT>;
+    deployContract(
+      name: "PythEntropyOTP",
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.PythEntropyOTP>;
 
     deployContract(
       name: "AccessControl",
@@ -264,10 +342,40 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.Strings>;
     deployContract(
+      name: "EntropyEvents",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.EntropyEvents>;
+    deployContract(
+      name: "EntropyEventsV2",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.EntropyEventsV2>;
+    deployContract(
+      name: "IEntropy",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IEntropy>;
+    deployContract(
+      name: "IEntropyConsumer",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IEntropyConsumer>;
+    deployContract(
+      name: "IEntropyV2",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.IEntropyV2>;
+    deployContract(
       name: "ProofOfCommerceSBT",
       args: any[],
       signerOrOptions?: ethers.Signer | DeployContractOptions
     ): Promise<Contracts.ProofOfCommerceSBT>;
+    deployContract(
+      name: "PythEntropyOTP",
+      args: any[],
+      signerOrOptions?: ethers.Signer | DeployContractOptions
+    ): Promise<Contracts.PythEntropyOTP>;
 
     // default types
     getContractFactory(

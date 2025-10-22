@@ -3,7 +3,7 @@ import { sendGenericSms } from "../sms/sender.js";
 import { templates } from "../sms/templates.js";
 import { PayCommand, SellCommand, MerchantRegisterCommand, MerchantRequestPaymentCommand } from "../commands/commandTypes.js";
 import { MerchantModel } from "../../models/Merchant.js";
-import { getInrUsdPrice } from "../vincent/priceFeed.js";
+import { getInrUsdPrice, getInrUsdPriceWithOnChainUpdate } from "../vincent/priceFeed.js";
 import { executePyusdTransfer, mintSBTOnChain } from "../hedera/transactions.js";
 import { executeAaveWithdrawAndSend, autoSupplyToAave, isVincentConfigured } from "../vincent/vincentClient.js";
 import { autoYieldOnReceive } from "./autoYield.js";
@@ -12,6 +12,13 @@ import { SbtPassportModel } from "../../models/SBTPassport.js";
 
 export async function executePayFlow(phoneNumber: string, command: PayCommand) {
   try {
+    logger.info({ 
+      phoneNumber, 
+      recipient: command.recipientPhone, 
+      amount: command.amount, 
+      currency: command.currency 
+    }, "💸 PAY FLOW - Starting transaction");
+    
     const user = await getUserByPhoneNumber(phoneNumber);
     if (!user) {
       throw new Error("User not found");
@@ -22,44 +29,68 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
       return;
     }
 
+    logger.info({ 
+      senderWallet: user.walletAddress, 
+      senderPhone: phoneNumber 
+    }, "✅ Sender wallet verified");
+
     const recipient = await findOrCreateUser(command.recipientPhone);
     if (!recipient.walletAddress) {
       await sendGenericSms(phoneNumber, "Error: Recipient wallet not initialized.");
       return;
     }
 
-    logger.info(
-      { from: phoneNumber, to: command.recipientPhone, amount: command.amount, currency: command.currency },
-      "Processing payment"
-    );
+    logger.info({ 
+      recipientWallet: recipient.walletAddress, 
+      recipientPhone: command.recipientPhone 
+    }, "✅ Recipient wallet verified");
 
-    // Step 1: Get current INR/USD price from Pyth
+    // Step 1: Get current INR/USD price from Pyth (with on-chain update!)
+    logger.info({ currency: command.currency, amount: command.amount }, "🔮 [PYTH NETWORK] Fetching real-time price with on-chain update...");
+    
     let pyusdAmount = command.amount;
+    let pythTxHash: string | undefined;
+    
     if (command.currency === "INR") {
       try {
-        const inrUsdPrice = await getInrUsdPrice();
-        const usdAmount = command.amount / inrUsdPrice;
+        const { price: inrUsdPrice, onChainUpdated, txHash } = await getInrUsdPriceWithOnChainUpdate();
+        
+        const usdAmount = command.amount * inrUsdPrice;
         pyusdAmount = usdAmount; // PYUSD is 1:1 with USD
-        logger.info({ inrUsdPrice, usdAmount, pyusdAmount }, "Converted INR to PYUSD");
+        pythTxHash = txHash;
+        
+        logger.info({ 
+          inrAmount: command.amount,
+          inrUsdPrice, 
+          usdAmount, 
+          pyusdAmount,
+          onChainUpdated,
+          pythTxHash: txHash || "N/A",
+          source: onChainUpdated ? "On-Chain Pyth Contract" : "Pyth Hermes API"
+        }, onChainUpdated 
+          ? "✅✅✅ [PYTH NETWORK] PRICE FETCHED AND UPDATED ON-CHAIN" 
+          : "✅ [PYTH NETWORK] PRICE CONVERSION COMPLETE");
       } catch (error) {
-        logger.warn({ err: error }, "Failed to get Pyth price, using 1:1 conversion");
+        logger.warn({ err: error }, "⚠️ [PYTH NETWORK] Failed to get price, using fallback");
         pyusdAmount = command.amount / 83; // Fallback: ~83 INR per USD
       }
     }
 
     // Step 2: Execute DeFi automation via Vincent
-    // This is NOT a simple transfer - it's a complex multi-step DeFi operation:
-    // 1. Withdraw PYUSD from Aave lending pool (where it's earning yield)
-    // 2. Transfer to recipient
-    // This demonstrates true DeFi automation for the Lit Protocol prize
-    logger.info({ user: user.walletAddress, recipient: recipient.walletAddress, amount: pyusdAmount }, "Executing Vincent DeFi automation");
+    logger.info({}, "🤖 [LIT PROTOCOL + VINCENT] Checking DeFi automation...");
     
     let txId: string;
     let vincentResult: any = null;
     
     if (isVincentConfigured()) {
       // Use Vincent DeFi automation (PRIZE-WINNING FEATURE)
-      logger.info("Using Vincent AaveWithdrawAndSend ability");
+      logger.info({ 
+        ability: "AaveWithdrawAndSend",
+        from: user.walletAddress,
+        to: recipient.walletAddress,
+        amount: pyusdAmount
+      }, "🚀 [LIT PROTOCOL] Executing Vincent ability...");
+      
       vincentResult = await executeAaveWithdrawAndSend(
         user.walletAddress,
         phoneNumber,
@@ -72,21 +103,40 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
       
       if (vincentResult.success) {
         txId = vincentResult.transferTxHash || vincentResult.withdrawTxHash || "vincent-tx-" + Date.now();
-        logger.info({ vincentResult }, "Vincent DeFi automation completed");
+        logger.info({ 
+          txHash: txId,
+          withdrawTx: vincentResult.withdrawTxHash,
+          transferTx: vincentResult.transferTxHash
+        }, "✅ [LIT PROTOCOL + VINCENT] DeFi automation SUCCESSFUL");
       } else {
         // Fallback to direct Hedera transfer
-        logger.warn({ error: vincentResult.error }, "Vincent execution failed, falling back to Hedera");
+        logger.warn({ error: vincentResult.error }, "⚠️ [VINCENT] Execution failed, using Hedera fallback");
+        logger.info({ to: recipient.walletAddress, amount: pyusdAmount }, "⛓️  [HEDERA] Executing direct PYUSD transfer...");
         txId = await executePyusdTransfer(recipient.walletAddress, pyusdAmount);
+        logger.info({ txId }, "✅ [HEDERA] Transfer complete");
       }
     } else {
       // Fallback: Direct Hedera transfer (for demo without Vincent config)
-      logger.info("Vincent not configured, using direct Hedera transfer");
+      logger.info({}, "ℹ️  [VINCENT] Not configured, using direct Hedera");
+      logger.info({ to: recipient.walletAddress, amount: pyusdAmount }, "⛓️  [HEDERA] Executing PYUSD transfer...");
       txId = await executePyusdTransfer(recipient.walletAddress, pyusdAmount);
+      logger.info({ txId }, "✅ [HEDERA] Transfer complete");
     }
 
     // Step 3: Mint SBT on Hedera smart contract
-    logger.info({ recipient: recipient.walletAddress, txId }, "Minting SBT on-chain");
+    logger.info({ 
+      recipient: recipient.walletAddress, 
+      paymentTxId: txId,
+      amount: command.amount,
+      currency: command.currency
+    }, "🎖️  [HEDERA SBT] Minting Proof of Commerce NFT...");
+    
     const sbtTxId = await mintSBTOnChain(recipient.walletAddress, command.amount, command.currency, pyusdAmount, txId);
+    
+    logger.info({ 
+      sbtTxId,
+      recipient: recipient.walletAddress
+    }, "✅ [HEDERA SBT] NFT minted successfully");
 
     // Step 4: Store transaction record in database
     const sbtRecord = new SbtPassportModel({
