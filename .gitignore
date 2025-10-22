@@ -30,3 +30,7 @@ Thumbs.db
 pnpm-debug.log
 .turbo/
 
+# Documentation - exclude all .md files except README
+*.md
+!README.md
+!**/README.md
