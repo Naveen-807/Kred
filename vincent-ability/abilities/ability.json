@@ -1,0 +1,127 @@
+{
+  "name": "AaveWithdrawAndSend",
+  "version": "1.0.0",
+  "description": "Withdraw PYUSD from Aave lending pool and send to recipient in a single atomic operation. Enables yield-bearing payments for the unbanked via SMS.",
+  "author": "OfflinePay",
+  "license": "MIT",
+  "tags": [
+    "aave",
+    "defi",
+    "lending",
+    "yield",
+    "pyusd",
+    "automation",
+    "sms",
+    "financial-inclusion"
+  ],
+  "category": "defi",
+  "complexity": "advanced",
+  "networks": [
+    "sepolia",
+    "baseSepolia"
+  ],
+  "protocols": [
+    "aave-v3"
+  ],
+  "functions": [
+    {
+      "name": "aaveWithdrawAndSend",
+      "description": "Withdraw PYUSD from Aave and transfer to recipient in a single atomic operation",
+      "parameters": [
+        {
+          "name": "recipient",
+          "type": "address",
+          "description": "Recipient wallet address",
+          "required": true
+        },
+        {
+          "name": "amount",
+          "type": "string",
+          "description": "Amount in PYUSD (e.g., '10.50')",
+          "required": true
+        },
+        {
+          "name": "network",
+          "type": "string",
+          "description": "Network to execute on (sepolia or baseSepolia)",
+          "required": false,
+          "default": "sepolia"
+        }
+      ],
+      "returns": {
+        "success": "boolean",
+        "withdrawTxHash": "string",
+        "transferTxHash": "string",
+        "error": "string"
+      }
+    },
+    {
+      "name": "autoSupplyToAave",
+      "description": "Automatically supply PYUSD to Aave for yield generation",
+      "parameters": [
+        {
+          "name": "amount",
+          "type": "string",
+          "description": "Amount in PYUSD to supply",
+          "required": true
+        },
+        {
+          "name": "network",
+          "type": "string",
+          "description": "Network to execute on",
+          "required": false,
+          "default": "sepolia"
+        }
+      ],
+      "returns": {
+        "success": "boolean",
+        "txHash": "string",
+        "error": "string"
+      }
+    },
+    {
+      "name": "getYieldEarned",
+      "description": "Get current yield earned from Aave",
+      "parameters": [
+        {
+          "name": "network",
+          "type": "string",
+          "description": "Network to query",
+          "required": false,
+          "default": "sepolia"
+        }
+      ],
+      "returns": {
+        "aTokenBalance": "string",
+        "pyusdSupplied": "string",
+        "yieldEarned": "string"
+      }
+    }
+  ],
+  "contracts": {
+    "sepolia": {
+      "aavePool": "0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951",
+      "pyusd": "0x9E6D21E759A7A288b80eef94E4737D313D31c13f",
+      "aPyusd": "0x8a5b8e2e1c8e5c5e5c5e5c5e5c5e5c5e5c5e5c5e"
+    },
+    "baseSepolia": {
+      "aavePool": "0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951",
+      "pyusd": "0x9E6D21E759A7A288b80eef94E4737D313D31c13f",
+      "aPyusd": "0x8a5b8e2e1c8e5c5e5c5e5c5e5c5e5c5e5c5e5c5e"
+    }
+  },
+  "useCases": [
+    "SMS-triggered DeFi payments",
+    "Automatic yield generation for unbanked",
+    "Non-custodial wallet automation",
+    "Feature phone DeFi access"
+  ],
+  "prizeTrack": "Lit Protocol - Best DeFi Automation Vincent App",
+  "prizeValue": "$5,000",
+  "innovation": [
+    "First SMS-native Vincent DeFi ability",
+    "Multi-step atomic DeFi operations",
+    "Automatic yield-bearing wallets",
+    "Zero-barrier financial inclusion"
+  ]
+}

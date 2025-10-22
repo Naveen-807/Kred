@@ -1,21 +1,27 @@
-import { VincentSDK } from "@lit-protocol/vincent-sdk";
+import { getVincentToolClient } from "@lit-protocol/vincent-sdk";
+import type { VincentToolClient } from "@lit-protocol/vincent-sdk";
 
 import { config } from "../../config/index.js";
+import { logger } from "../../utils/logger.js";
 
-let vincentSdk: VincentSDK | null = null;
+let vincentClient: VincentToolClient | null = null;
 
-export function getVincentSdk(): VincentSDK {
-  if (!vincentSdk) {
-    if (!config.vincent.appId || !config.vincent.delegateePrivateKey) {
-      throw new Error("Vincent configuration missing");
+export function getVincentSdk(): VincentToolClient {
+  if (!vincentClient) {
+    if (!config.vincent.appId) {
+      throw new Error("Vincent App ID missing in configuration");
     }
 
-    vincentSdk = new VincentSDK({
-      appId: config.vincent.appId,
-      delegateePrivateKey: config.vincent.delegateePrivateKey,
-      rpcUrl: config.vincent.rpcUrl
-    });
+    try {
+      vincentClient = getVincentToolClient({
+        appId: config.vincent.appId,
+      });
+      logger.info({ appId: config.vincent.appId }, "Vincent client initialized");
+    } catch (error) {
+      logger.error({ err: error }, "Failed to initialize Vincent client");
+      throw error;
+    }
   }
 
-  return vincentSdk;
+  return vincentClient;
 }

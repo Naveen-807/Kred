@@ -77,5 +77,9 @@ export const templates = {
     sbtCount: number,
     yieldEarned: number
   ) =>
-    `Wallet: ${wallet}\nPYUSD: ${pyusd.toFixed(2)}\nSBTs: ${sbtCount}\nYield Earned: ${yieldEarned.toFixed(2)} PYUSD`
+    `Wallet: ${wallet}\nPYUSD: ${pyusd.toFixed(2)}\nSBTs: ${sbtCount}\nYield Earned: ${yieldEarned.toFixed(2)} PYUSD`,
+  recipientNotRegistered: (phone: string) => `The recipient ${phone} is not registered with OfflinePay.`,
+  notImplemented: () => `This feature is not yet implemented.`,
+  paymentReceived: (amount: number, currency: string, sender: string) =>
+    `✓ Payment received!\n${amount} ${currency} from ${sender}`
 };

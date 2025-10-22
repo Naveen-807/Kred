@@ -15,6 +15,10 @@ export interface UserDocument extends mongoose.Document {
   pinHash?: string;
   sessionState: SessionState;
   transakDepositWallet?: string;
+  yieldStats?: {
+    totalSupplied: number;
+    lastSupplyDate?: Date;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,7 +44,14 @@ const userSchema = new Schema<UserDocument>(
       type: sessionStateSchema,
       default: { step: "AWAITING_PIN", failedAttempts: 0 }
     },
-    transakDepositWallet: { type: String }
+    transakDepositWallet: { type: String },
+    yieldStats: {
+      type: {
+        totalSupplied: { type: Number, default: 0 },
+        lastSupplyDate: { type: Date }
+      },
+      default: { totalSupplied: 0 }
+    }
   },
   {
     timestamps: true

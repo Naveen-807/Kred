@@ -1,9 +1,27 @@
 import { findOrCreateUser } from "../core/userService.js";
-import { handleReset, handleSetPinCommand, initiateCommandWithOtp, verifyOtp, verifyPinForCommand } from "../sms/handlers.js";
+import {
+  executePayFlow,
+  executeSellFlow,
+  executeMerchantRegisterFlow,
+  executeMerchantRequestPaymentFlow
+} from "../payments/service.js";
+import {
+  handleReset,
+  handleSetPinCommand,
+  initiateCommandWithOtp,
+  verifyOtp,
+  verifyPinForCommand
+} from "../sms/handlers.js";
 import { sendGenericSms } from "../sms/sender.js";
 import { templates } from "../sms/templates.js";
 
-import { ParsedCommand, PayCommand } from "./commandTypes.js";
+import {
+  ParsedCommand,
+  PayCommand,
+  SellCommand,
+  MerchantRegisterCommand,
+  MerchantRequestPaymentCommand
+} from "./commandTypes.js";
 
 export async function executeCommand(phoneNumber: string, command: ParsedCommand) {
   const user = await findOrCreateUser(phoneNumber);
@@ -39,6 +57,18 @@ export async function executeCommand(phoneNumber: string, command: ParsedCommand
       await initiateCommandWithOtp(phoneNumber, command);
       break;
     }
+    case "SELL": {
+      await executeSellFlow(phoneNumber, command as SellCommand);
+      break;
+    }
+    case "MERCHANT_REGISTER": {
+      await executeMerchantRegisterFlow(phoneNumber, command as MerchantRegisterCommand);
+      break;
+    }
+    case "MERCHANT_REQUEST_PAYMENT": {
+      await executeMerchantRequestPaymentFlow(phoneNumber, command as MerchantRequestPaymentCommand);
+      break;
+    }
     default: {
       await sendGenericSms(phoneNumber, templates.help());
     }
@@ -46,17 +76,5 @@ export async function executeCommand(phoneNumber: string, command: ParsedCommand
 }
 
 async function executePendingCommand(phoneNumber: string, command: PayCommand) {
-  const confirmationCode = `demo-${Date.now()}`;
-
-  await sendGenericSms(
-    phoneNumber,
-    templates.payConfirmation(
-      command.amount,
-      command.currency,
-      command.amount,
-      command.recipientPhone,
-      confirmationCode,
-      0
-    )
-  );
+  await executePayFlow(phoneNumber, command);
 }

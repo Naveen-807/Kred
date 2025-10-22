@@ -14,7 +14,10 @@ export async function generateOtp(): Promise<OtpResult> {
   const otpLength = 6;
   let otp = "";
 
-  if (config.pyth.entropyApiUrl) {
+  // Pyth Entropy for secure random OTP
+  // Note: Using crypto.randomInt as Pyth Entropy API endpoint needs proper configuration
+  // In production, integrate with Pyth Entropy for verifiable randomness
+  if (config.pyth.entropyApiUrl && false) { // Disabled until proper endpoint configured
     try {
       const response = await axios.post(
         `${config.pyth.entropyApiUrl}/v1/otp`,
@@ -26,8 +29,9 @@ export async function generateOtp(): Promise<OtpResult> {
         }
       );
       otp = response.data?.otp;
+      logger.info("OTP generated via Pyth Entropy");
     } catch (error) {
-      logger.warn({ err: error }, "Falling back to local OTP generation");
+      logger.warn({ err: error }, "Pyth Entropy unavailable, using secure fallback");
     }
   }
 

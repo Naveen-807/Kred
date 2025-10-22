@@ -30,3 +30,22 @@ export async function mintSbtToUser(params: {
     timestamp: new Date()
   });
 }
+
+export async function mintSBT(
+  walletAddress: string,
+  fiatAmount: number,
+  fiatCurrency: string,
+  pyusdAmount: number,
+  transactionHash: string
+): Promise<number> {
+  const sbtRecord = new SbtPassportModel({
+    walletAddress,
+    fiatAmount,
+    fiatCurrency,
+    pyusdAmount,
+    transactionHash,
+    timestamp: new Date()
+  });
+  const saved = await sbtRecord.save();
+  return saved._id as unknown as number;
+}

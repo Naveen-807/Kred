@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-import { twilioClient } from "../../backend/src/services/twilioClient.js";
+import { sendSms } from "../../backend/src/services/msg91Client.js";
 import { config as backendConfig } from "../../backend/src/config/index.js";
 import { SbtPassportModel } from "../../backend/src/models/SBTPassport.js";
 import { UserModel } from "../../backend/src/models/User.js";
@@ -33,11 +33,7 @@ Transactions: ${JSON.stringify(sbts)}`;
   const result = JSON.parse(text);
 
   if (result.eligible) {
-    await twilioClient.messages.create({
-      to: user.phoneNumber,
-      from: backendConfig.twilio.phoneNumber,
-      body: templates.loanOffer(result.loanAmount)
-    });
+    await sendSms(user.phoneNumber, templates.loanOffer(result.loanAmount));
   }
 }
 

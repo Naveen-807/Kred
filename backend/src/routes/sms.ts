@@ -3,14 +3,21 @@ import express from "express";
 import { parseCommand } from "../modules/commands/parser.js";
 import { executeCommand } from "../modules/commands/commandExecutor.js";
 import { templates } from "../modules/sms/templates.js";
-import { twilioClient } from "../services/twilioClient.js";
+import { sendSms } from "../services/msg91Client.js";
 import { logger } from "../utils/logger.js";
 
 export const smsRouter = express.Router();
 
 smsRouter.post("/", async (req, res) => {
-  const from = req.body.From;
-  const body = req.body.Body ?? "";
+  // Trim and ensure proper phone number format
+  let from = (req.body.From || "").trim();
+  
+  // Add + prefix if missing
+  if (from && !from.startsWith("+")) {
+    from = "+" + from;
+  }
+  
+  const body = (req.body.Body ?? "").trim();
 
   logger.info({ from, body }, "Incoming SMS");
 
@@ -22,11 +29,7 @@ smsRouter.post("/", async (req, res) => {
   } catch (error) {
     logger.warn({ err: error }, "Failed to handle command");
     const hint = templates.invalidCommand("Try PAY 100 INR to +919876543210.");
-    await twilioClient.messages.create({
-      to: from,
-      from: req.body.To,
-      body: hint
-    });
+    await sendSms(from, hint);
     res.status(200).end();
   }
 });

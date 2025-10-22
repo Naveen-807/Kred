@@ -1,0 +1,25 @@
+{
+  "name": "@offlinepay/ability-pyusd-send",
+  "version": "1.0.0",
+  "description": "Vincent ability for PYUSD token transfers on Hedera",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "keywords": [
+    "lit-protocol",
+    "vincent",
+    "hedera",
+    "pyusd",
+    "defi"
+  ],
+  "dependencies": {
+    "ethers": "^6.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.5.4"
+  }
+}

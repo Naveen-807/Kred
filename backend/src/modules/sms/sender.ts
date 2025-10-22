@@ -1,19 +1,24 @@
-import { twilioClient } from "../../services/twilioClient.js";
+import { sendSmsWithRetry } from "../../services/twilioClient.js";
+import { logger } from "../../utils/logger.js";
 
 import { templates } from "./templates.js";
 
 export async function sendLoanOfferSms(phone: string, amount: number) {
-  await twilioClient.messages.create({
-    to: phone,
-    from: process.env.TWILIO_PHONE_NUMBER,
-    body: templates.loanOffer(amount)
-  });
+  try {
+    const sid = await sendSmsWithRetry(phone, templates.loanOffer(amount));
+    logger.info({ phone, sid }, "SMS sent successfully");
+  } catch (error) {
+    logger.error({ err: error, phone }, "Failed to send SMS after retries");
+    // Don't throw - we don't want to break the flow if SMS fails
+  }
 }
 
 export async function sendGenericSms(phone: string, message: string) {
-  await twilioClient.messages.create({
-    to: phone,
-    from: process.env.TWILIO_PHONE_NUMBER,
-    body: message
-  });
+  try {
+    const sid = await sendSmsWithRetry(phone, message);
+    logger.info({ phone, sid }, "SMS sent successfully");
+  } catch (error) {
+    logger.error({ err: error, phone }, "Failed to send SMS after retries");
+    // Don't throw - we don't want to break the flow if SMS fails
+  }
 }

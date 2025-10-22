@@ -7,7 +7,7 @@
   "main": "index.js",
   "engines": {
     "node": "^20.19.4",
-    "pnpm": "10.7.0"
+    "pnpm": "10.18.3"
   },
   "repository": {
     "type": "git",
@@ -47,7 +47,6 @@
     "@babel/preset-env": "7.28.3",
     "@dotenvx/dotenvx": "1.44.2",
     "@eslint/js": "9.25.1",
-    "@lit-protocol/vincent-example-e2e": "workspace:*",
     "@nx/eslint": "21.2.1",
     "@nx/eslint-plugin": "21.2.1",
     "@nx/jest": "21.2.1",

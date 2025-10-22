@@ -25,7 +25,7 @@ async function bootstrap() {
 
     registerRoutes(app);
 
-    app.use((err: unknown, _req: express.Request, res: express.Response) => {
+    app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
       logger.error({ err }, "Unhandled error in request pipeline");
       res.status(500).json({ message: "Internal server error" });
     });

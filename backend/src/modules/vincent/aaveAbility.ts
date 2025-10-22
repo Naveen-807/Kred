@@ -2,6 +2,8 @@ import { getVincentSdk } from "./sdk.js";
 import { computePyusdFromFiat, formatToTokenDecimals } from "./helpers.js";
 import { getInrUsdPrice } from "./priceFeed.js";
 import { logger } from "../../utils/logger.js";
+import { config } from "../../config/index.js";
+import { ethers } from "ethers";
 
 export async function executeAaveWithdrawAndSend(params: {
   amountFiat: number;
@@ -43,4 +45,35 @@ export async function executeAutoSupply(params: {
     abilityId: process.env.VINCENT_ABILITY_AAVE_AUTO_SUPPLY!,
     params
   });
+}
+
+export async function executeVincentPayment(
+  senderWallet: string,
+  recipientWallet: string,
+  pyusdAmount: number
+): Promise<string> {
+  try {
+    logger.info(
+      { sender: senderWallet, recipient: recipientWallet, amount: pyusdAmount },
+      "Executing Vincent payment"
+    );
+
+    // Generate a mock transaction hash for demo
+    // TODO: Integrate with actual Vincent SDK once configured
+    const commandId = `pay-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const mockTxHash = `0x${ethers.id(commandId).slice(2, 66)}`;
+
+    logger.warn(
+      { mockTxHash, commandId },
+      "Using mock transaction - Vincent SDK not fully configured"
+    );
+
+    // Simulate blockchain delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    return mockTxHash;
+  } catch (error) {
+    logger.error({ err: error, sender: senderWallet, recipient: recipientWallet }, "Vincent payment failed");
+    throw error;
+  }
 }

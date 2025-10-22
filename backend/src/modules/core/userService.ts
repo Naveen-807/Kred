@@ -1,31 +1,36 @@
-import { UserModel } from "../../models/User.js";
+import { UserModel, UserDocument } from "../../models/User.js";
 import { logger } from "../../utils/logger.js";
-import { createAccount } from "../hedera/client.js";
+import { generateUserWallet } from "../vincent/walletGeneration.js";
 import { sendGenericSms } from "../sms/sender.js";
 import { templates } from "../sms/templates.js";
 
-export async function findOrCreateUser(phoneNumber: string) {
+export async function findOrCreateUser(phoneNumber: string): Promise<UserDocument> {
   let user = await UserModel.findOne({ phoneNumber });
-  if (user) {
-    return user;
-  }
-
-  try {
-    const account = await createAccount();
-    user = await UserModel.create({
+  if (!user) {
+    // Generate non-custodial wallet via Lit Protocol
+    const { walletAddress } = await generateUserWallet(phoneNumber);
+    
+    user = new UserModel({
       phoneNumber,
-      walletAddress: account.accountId,
-      walletPrivateKey: account.privateKey
+      walletAddress,
+      sessionState: {
+        step: "AWAITING_PIN_SETUP",
+        pendingCommand: null,
+        otp: null,
+        otpExpiresAt: null,
+        failedAttempts: 0
+      }
     });
-  } catch (error) {
-    logger.error({ err: error }, "Failed to create Hedera account, using placeholder wallet");
-    user = await UserModel.create({
-      phoneNumber,
-      walletAddress: "0.0.placeholder"
-    });
+    await user.save();
+    
+    logger.info({ phoneNumber, walletAddress }, "Created new user with wallet");
+    
+    // Send welcome message
+    await sendGenericSms(phoneNumber, templates.welcome());
   }
-
-  await sendGenericSms(phoneNumber, templates.welcome());
-  logger.info({ phoneNumber }, "New OfflinePay user created");
   return user;
+}
+
+export async function getUserByPhoneNumber(phoneNumber: string): Promise<UserDocument | null> {
+  return UserModel.findOne({ phoneNumber });
 }
