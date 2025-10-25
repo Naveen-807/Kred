@@ -4,6 +4,7 @@ node_modules/
 # Build outputs
 dist/
 coverage/
+build/
 
 # Environment files
 *.env
@@ -18,6 +19,7 @@ ai-agent/.env
 # Logs
 *.log
 logs/
+sms-gateway-logs/
 
 # IDE / OS files
 .DS_Store
@@ -30,7 +32,43 @@ Thumbs.db
 pnpm-debug.log
 .turbo/
 
-# Documentation - exclude all .md files except README
+# Contract artifacts (keep only necessary)
+contracts/artifacts/
+contracts/cache/
+contracts/typechain-types/
+
+# Test files (not needed in production)
+backend/test-*.js
+backend/test-*.ts
+test-*.sh
+
+# Temporary files
+tmp/
+tmp_*/
+.aw-signer-admin-storage/
+
+# Demo files (optional - uncomment if you want to exclude)
+# DEMO-DASHBOARD.html
+# DEMO_GUIDE.txt
+
+# SMS Handler apps (React Native - development only)
+sms-handler-app/
+sms-gateway-app/
+
+# Shell scripts (deployment specific)
+deploy-vincent-abilities.sh
+update-env.sh
+
+# Documentation - keep important files
 *.md
 !README.md
 !**/README.md
+!PROJECT_PLAN.md
+!TERMUX_SMS_GATEWAY_PLAN.md
+!SMS_TESTING_GUIDE.md
+!AUTO_OTP_IMPLEMENTATION.md
+!PYTH_STATUS.md
+!PHASE2_COMPLETE.md
+
+# Keep termux gateway (important for deployment)
+!termux-sms-gateway/

@@ -41,6 +41,28 @@ function getHederaClient(): Client {
   return hederaClient;
 }
 
+async function ensureOperatorTokenAssociation(tokenId: TokenId) {
+  const client = getHederaClient();
+  try {
+    const tx = await new TokenAssociateTransaction()
+      .setAccountId(client.operatorAccountId!)
+      .setTokenIds([tokenId])
+      .freezeWith(client)
+      .sign(PrivateKey.fromStringECDSA(config.hedera.operatorKey));
+
+    const res = await tx.execute(client);
+    const receipt = await res.getReceipt(client);
+    logger.info({ status: receipt.status.toString(), tokenId: tokenId.toString() }, "Operator token association attempt");
+  } catch (err: any) {
+    const msg = String(err?.message || err);
+    if (msg.includes("TOKEN_ALREADY_ASSOCIATED")) {
+      logger.info({ tokenId: tokenId.toString() }, "Operator already associated with token");
+    } else {
+      logger.warn({ err, tokenId: tokenId.toString() }, "Token association for operator may have failed or is unnecessary");
+    }
+  }
+}
+
 /**
  * Execute a real HBAR transfer on Hedera
  */
@@ -123,11 +145,18 @@ export async function executePyusdTransfer(
     const amountInSmallestUnit = Math.floor(amountPyusd * 1_000_000);
 
     const tokenId = TokenId.fromSolidityAddress(tokenAddress);
+
+    // Ensure operator is associated with token to send
+    await ensureOperatorTokenAssociation(tokenId);
     let recipientId: AccountId;
     
     if (recipientAddress.startsWith("0x")) {
-      recipientId = AccountId.fromString(config.hedera.operatorId);
-      logger.warn("Using operator account as recipient for EVM address");
+      try {
+        recipientId = AccountId.fromSolidityAddress(recipientAddress);
+      } catch {
+        recipientId = AccountId.fromString(config.hedera.operatorId);
+        logger.warn("Recipient EVM address not resolvable on Hedera; using operator as recipient for demo");
+      }
     } else {
       recipientId = AccountId.fromString(recipientAddress);
     }

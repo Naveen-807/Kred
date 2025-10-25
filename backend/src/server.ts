@@ -40,6 +40,12 @@ async function bootstrap() {
       res.sendFile(path.join(__dirname, "web", "sms-simulator.html"));
     });
 
+    // Optional lightweight logs endpoint for UI (reads recent stdout buffer if any middleware attached)
+    app.get("/logs", (_req, res) => {
+      res.type("text/plain");
+      res.send("Live logs available in server output. Integrate with a log transport for streaming if needed.\n");
+    });
+
     registerRoutes(app);
 
     app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

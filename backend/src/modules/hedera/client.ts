@@ -25,7 +25,8 @@ function getClient(): Client {
     hederaClient = Client.forName(config.hedera.network);
     hederaClient.setOperator(
       AccountId.fromString(config.hedera.operatorId),
-      PrivateKey.fromString(config.hedera.operatorKey)
+      // Operator key is a raw 0x ECDSA private key
+      PrivateKey.fromStringECDSA(config.hedera.operatorKey)
     );
   }
   return hederaClient;

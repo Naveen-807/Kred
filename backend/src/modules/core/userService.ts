@@ -8,11 +8,12 @@ export async function findOrCreateUser(phoneNumber: string): Promise<UserDocumen
   let user = await UserModel.findOne({ phoneNumber });
   if (!user) {
     // Generate non-custodial wallet via Lit Protocol
-    const { walletAddress } = await generateUserWallet(phoneNumber);
+    const { walletAddress, publicKey } = await generateUserWallet(phoneNumber);
     
     user = new UserModel({
       phoneNumber,
       walletAddress,
+      pkpPublicKey: publicKey,
       sessionState: {
         step: "AWAITING_PIN_SETUP",
         pendingCommand: null,

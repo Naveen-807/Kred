@@ -55,7 +55,12 @@ export async function getInrUsdPriceWithOnChainUpdate(): Promise<{
     }
 
     const { price, expo } = feed.price;
+    // Normalize the raw Pyth price using the exponent
     const normalized = Number(price) * Math.pow(10, expo);
+    // We want USD per 1 INR for display and conversion
+    // Some feeds may be USD/INR (~83) while others may be INR/USD (~0.012)
+    // If value is > 10 it's likely INR per 1 USD; invert to get USD per 1 INR
+    const usdPerInr = normalized > 10 ? 1 / normalized : normalized;
 
     // Attempt on-chain update if enabled
     if (USE_ONCHAIN_UPDATE && PYTH_CONTRACT_ADDRESS) {
@@ -98,7 +103,7 @@ export async function getInrUsdPriceWithOnChainUpdate(): Promise<{
         }, "✅✅✅ [PYTH] PRICE UPDATED ON-CHAIN SUCCESSFULLY");
 
         return {
-          price: normalized,
+          price: usdPerInr,
           onChainUpdated: true,
           txHash: receipt.transactionHash
         };
@@ -107,9 +112,9 @@ export async function getInrUsdPriceWithOnChainUpdate(): Promise<{
       }
     }
 
-    logger.info({ price: normalized, source: "Hermes API" }, "✅ [PYTH] Price fetched from Hermes");
+    logger.info({ price: usdPerInr, source: "Hermes API" }, "✅ [PYTH] Price fetched from Hermes");
     return {
-      price: normalized,
+      price: usdPerInr,
       onChainUpdated: false
     };
 

@@ -69,5 +69,15 @@ export async function sendSmsWithRetry(
     }
   }
 
-  throw lastError || new Error('Failed to send SMS after retries');
+  // If Twilio fails after all retries, try Vonage as fallback
+  logger.info({ to }, '📱 Twilio failed, trying Vonage as fallback...');
+  try {
+    const { sendSmsViaVonage } = await import('./vonageClient.js');
+    const result = await sendSmsViaVonage(to, message);
+    logger.info({ to, result }, '✅ SMS sent successfully via Vonage fallback');
+    return result;
+  } catch (vonageError) {
+    logger.error({ err: vonageError, to }, '❌ Vonage fallback also failed');
+    throw lastError || new Error('Failed to send SMS via both Twilio and Vonage');
+  }
 }

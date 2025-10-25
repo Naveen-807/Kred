@@ -121,3 +121,83 @@ export async function generateOtp(): Promise<OtpResult> {
     isOnChain: false
   };
 }
+
+/**
+ * AUTO-VERIFY OTP from blockchain (GAME-CHANGING INNOVATION!)
+ * This eliminates the need for users to manually enter OTP
+ * We read it directly from the Pyth Entropy contract
+ */
+export async function autoVerifyOtpFromChain(phoneNumber: string): Promise<{
+  verified: boolean;
+  otp?: string;
+  error?: string;
+}> {
+  const USE_ONCHAIN_ENTROPY = process.env.USE_ONCHAIN_PYTH_ENTROPY === 'true';
+  
+  if (!USE_ONCHAIN_ENTROPY || !process.env.PYTH_ENTROPY_CONTRACT_ADDRESS) {
+    logger.info({}, "⚠️ [AUTO-VERIFY] On-chain entropy not configured, skipping auto-verify");
+    return { verified: false, error: "On-chain entropy not enabled" };
+  }
+
+  try {
+    logger.info({ phoneNumber }, "🔍 [AUTO-VERIFY] Reading OTP from blockchain...");
+    
+    // Connect to Hedera
+    const provider = new ethers.providers.JsonRpcProvider(
+      config.hedera.network === 'testnet' 
+        ? 'https://testnet.hashio.io/api'
+        : 'https://mainnet.hashio.io/api'
+    );
+    
+    const wallet = new ethers.Wallet(config.hedera.operatorKey, provider);
+    
+    // Contract ABI
+    const abi = [
+      "function getOTP(string calldata phoneNumber) external view returns (uint256 otp, bool isValid, uint256 expiresAt)"
+    ];
+    
+    const contract = new ethers.Contract(
+      process.env.PYTH_ENTROPY_CONTRACT_ADDRESS,
+      abi,
+      wallet
+    );
+    
+    // Read OTP from contract
+    const [otp, isValid, expiresAt] = await contract.getOTP(phoneNumber);
+    
+    // Check if OTP is valid and not expired
+    const now = Math.floor(Date.now() / 1000);
+    const expiresAtSeconds = expiresAt.toNumber();
+    
+    if (!isValid) {
+      logger.warn({ phoneNumber }, "⚠️ [AUTO-VERIFY] No valid OTP found on-chain");
+      return { verified: false, error: "No OTP found" };
+    }
+    
+    if (now > expiresAtSeconds) {
+      logger.warn({ phoneNumber, expiresAt: expiresAtSeconds }, "⚠️ [AUTO-VERIFY] OTP expired");
+      return { verified: false, error: "OTP expired" };
+    }
+    
+    if (otp.eq(0)) {
+      logger.warn({ phoneNumber }, "⚠️ [AUTO-VERIFY] OTP is zero");
+      return { verified: false, error: "Invalid OTP" };
+    }
+    
+    logger.info({
+      phoneNumber,
+      otp: otp.toString(),
+      expiresAt: new Date(expiresAtSeconds * 1000).toISOString(),
+      remainingSeconds: expiresAtSeconds - now
+    }, "✅✅✅ [AUTO-VERIFY] OTP VERIFIED FROM BLOCKCHAIN - NO USER INPUT NEEDED!");
+    
+    return {
+      verified: true,
+      otp: otp.toString()
+    };
+    
+  } catch (error) {
+    logger.error({ err: error, phoneNumber }, "❌ [AUTO-VERIFY] Failed to read OTP from blockchain");
+    return { verified: false, error: error.message };
+  }
+}

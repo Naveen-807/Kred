@@ -2,7 +2,7 @@
   "name": "AaveWithdrawAndSend",
   "version": "1.0.0",
   "description": "Withdraw PYUSD from Aave lending pool and send to recipient in a single atomic operation. Enables yield-bearing payments for the unbanked via SMS.",
-  "deployedAt": "2025-10-22T11:46:59.897Z",
+  "deployedAt": "2025-10-22T19:39:00.465Z",
   "networks": [
     "sepolia",
     "baseSepolia"

@@ -5,6 +5,7 @@ import { PayCommand, SellCommand, MerchantRegisterCommand, MerchantRequestPaymen
 import { MerchantModel } from "../../models/Merchant.js";
 import { getInrUsdPrice, getInrUsdPriceWithOnChainUpdate } from "../vincent/priceFeed.js";
 import { executePyusdTransfer, mintSBTOnChain } from "../hedera/transactions.js";
+import { patchUIMessage } from "../ui/messageStore.js";
 import { executeAaveWithdrawAndSend, autoSupplyToAave, isVincentConfigured } from "../vincent/vincentClient.js";
 import { autoYieldOnReceive } from "./autoYield.js";
 import { logger } from "../../utils/logger.js";
@@ -70,6 +71,9 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
         }, onChainUpdated 
           ? "✅✅✅ [PYTH NETWORK] PRICE FETCHED AND UPDATED ON-CHAIN" 
           : "✅ [PYTH NETWORK] PRICE CONVERSION COMPLETE");
+        try {
+          patchUIMessage(phoneNumber, { inrUsdPrice, pythTxHash: txHash, status: "PYTH_OK" });
+        } catch {}
       } catch (error) {
         logger.warn({ err: error }, "⚠️ [PYTH NETWORK] Failed to get price, using fallback");
         pyusdAmount = command.amount / 83; // Fallback: ~83 INR per USD
@@ -123,6 +127,11 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
       logger.info({ txId }, "✅ [HEDERA] Transfer complete");
     }
 
+    // Reflect transaction hash to UI for terminal dashboard
+    try {
+      patchUIMessage(phoneNumber, { txHash: txId, status: "TX_CONFIRMED" });
+    } catch {}
+
     // Step 3: Mint SBT on Hedera smart contract
     logger.info({ 
       recipient: recipient.walletAddress, 
@@ -137,6 +146,9 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
       sbtTxId,
       recipient: recipient.walletAddress
     }, "✅ [HEDERA SBT] NFT minted successfully");
+    try {
+      patchUIMessage(phoneNumber, { status: "SBT_MINTED" });
+    } catch {}
 
     // Step 4: Store transaction record in database
     const sbtRecord = new SbtPassportModel({

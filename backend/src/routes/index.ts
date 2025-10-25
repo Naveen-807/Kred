@@ -3,6 +3,7 @@ import type { Express } from "express";
 import { smsRouter } from "./sms.js";
 import { statusRouter } from "./status.js";
 import { voiceRouter } from "./voice.js";
+import { smsGatewayRouter } from "./sms-gateway.js";
 
 export function registerRoutes(app: Express) {
   app.get("/health", (_req, res) => {
@@ -10,6 +11,8 @@ export function registerRoutes(app: Express) {
   });
 
   app.use("/webhook/sms", smsRouter);
+  app.use("/webhook", smsGatewayRouter);  // SMS Gateway routes
+  app.use("/api/gateway", smsGatewayRouter);  // Gateway management
   app.use("/webhook/status", statusRouter);
   app.use("/webhook/voice", voiceRouter);
 }

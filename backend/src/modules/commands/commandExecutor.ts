@@ -9,6 +9,7 @@ import {
   handleReset,
   handleSetPinCommand,
   initiateCommandWithOtp,
+  initiateCommandWithAutoOtp,
   verifyOtp,
   verifyPinForCommand
 } from "../sms/handlers.js";
@@ -16,7 +17,9 @@ import { sendGenericSms } from "../sms/sender.js";
 import { templates } from "../sms/templates.js";
 import { getInrUsdPrice } from "../vincent/priceFeed.js";
 import { generateUserWallet } from "../vincent/walletGeneration.js";
+import { generateUserWallet, isValidWalletAddress } from "../vincent/walletGeneration.js";
 import { logger } from "../../utils/logger.js";
+import { patchUIMessage, storeUIMessage } from "../ui/messageStore.js";
 
 import {
   ParsedCommand,
@@ -38,6 +41,7 @@ export async function executeCommand(phoneNumber: string, command: ParsedCommand
       const pending = await verifyOtp(phoneNumber, command.otp);
       if (pending) {
         await sendGenericSms(phoneNumber, templates.pinPrompt());
+        await sendGenericSms(phoneNumber, templates.pinPrompt(), true);
       }
       break;
     }
@@ -45,6 +49,7 @@ export async function executeCommand(phoneNumber: string, command: ParsedCommand
       const pending = await verifyPinForCommand(phoneNumber, command.pin);
       if (pending) {
         await executePendingCommand(phoneNumber, pending as PayCommand);
+        await executePendingCommand(phoneNumber, pending as PayCommand | SellCommand | MerchantRequestPaymentCommand);
       }
       break;
     }
@@ -57,7 +62,8 @@ export async function executeCommand(phoneNumber: string, command: ParsedCommand
         await sendGenericSms(phoneNumber, templates.pinPrompt());
         break;
       }
-      await initiateCommandWithOtp(phoneNumber, command);
+      // USE NEW AUTO-OTP FLOW! (GAME CHANGER)
+      await initiateCommandWithAutoOtp(phoneNumber, command);
       break;
     }
     case "SELL": {
@@ -97,7 +103,7 @@ async function handleBalanceCommand(phoneNumber: string) {
     
     // Generate or get wallet address
     let wallet;
-    if (user.walletAddress) {
+    if (user.walletAddress && isValidWalletAddress(user.walletAddress) && user.walletAddress !== 'TODO') {
       wallet = { walletAddress: user.walletAddress, publicKey: user.pkpPublicKey || '' };
       logger.info({ phoneNumber, wallet: wallet.walletAddress }, "🔐 [LIT PROTOCOL] Existing PKP wallet loaded");
     } else {
@@ -134,10 +140,21 @@ async function handleBalanceCommand(phoneNumber: string) {
     
     logger.info({ phoneNumber, messageLength: message.length }, "📤 Sending balance response via SMS");
     await sendGenericSms(phoneNumber, message);
+    try {
+      storeUIMessage(phoneNumber, message, undefined, "Reply HELP for commands");
+      patchUIMessage(phoneNumber, { walletAddress: wallet.walletAddress, inrUsdPrice });
+    } catch (e) {
+      // Ignore UI errors
+    }
     logger.info({ phoneNumber }, "✅ BALANCE COMMAND - Complete");
   } catch (error) {
     logger.error({ err: error, phoneNumber }, "❌ BALANCE COMMAND - Failed");
     await sendGenericSms(phoneNumber, "Error fetching balance. Please try again.");
+    try { 
+      storeUIMessage(phoneNumber, "Error fetching balance. Please try again."); 
+    } catch (e) {
+      // Ignore UI errors
+    }
   }
 }
 
@@ -158,9 +175,11 @@ async function handleStatusCommand(phoneNumber: string) {
       `Reply HELP for commands`;
     
     await sendGenericSms(phoneNumber, message);
+    try { storeUIMessage(phoneNumber, message); } catch {}
   } catch (error) {
     logger.error({ err: error, phoneNumber }, "Failed to get status");
     await sendGenericSms(phoneNumber, "Error fetching status. Please try again.");
+    try { storeUIMessage(phoneNumber, "Error fetching status. Please try again."); } catch {}
   }
 }
 

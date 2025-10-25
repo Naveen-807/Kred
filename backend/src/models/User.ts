@@ -12,6 +12,9 @@ export interface UserDocument extends mongoose.Document {
   phoneNumber: string;
   walletAddress: string;
   walletPrivateKey?: string;
+  hederaAccountId?: string;
+  hederaPrivateKey?: string;
+  pkpPublicKey?: string;
   pinHash?: string;
   sessionState: SessionState;
   transakDepositWallet?: string;
@@ -39,6 +42,9 @@ const userSchema = new Schema<UserDocument>(
     phoneNumber: { type: String, required: true, unique: true },
     walletAddress: { type: String, required: true },
     walletPrivateKey: { type: String },
+    hederaAccountId: { type: String },
+    hederaPrivateKey: { type: String },
+    pkpPublicKey: { type: String },
     pinHash: { type: String },
     sessionState: {
       type: sessionStateSchema,

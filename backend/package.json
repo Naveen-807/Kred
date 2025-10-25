@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "demo": "tsx src/interactiveDemo.ts",
     "build": "tsup src/server.ts --sourcemap",
     "start": "node dist/server.cjs",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",

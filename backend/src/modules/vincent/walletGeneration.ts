@@ -33,6 +33,7 @@ async function getLitNodeClient(): Promise<LitNodeClient> {
 export async function generateUserWallet(phoneNumber: string): Promise<{
   walletAddress: string;
   publicKey: string;
+  tokenId?: string;
 }> {
   try {
     logger.info({ phoneNumber }, "Generating PKP wallet via Lit Protocol");
@@ -96,28 +97,16 @@ export async function generateUserWallet(phoneNumber: string): Promise<{
         return {
           walletAddress: pkpInfo.walletAddress,
           publicKey: pkpInfo.publicKey,
+          tokenId: String(pkpInfo.tokenId),
         };
       } catch (error) {
-        logger.error({ err: error, phoneNumber }, "Real PKP minting failed, falling back to deterministic");
-        // Fall through to deterministic method
+        logger.error({ err: error, phoneNumber }, "Real PKP minting failed");
+        // STRICT: No mock fallback allowed
+        throw error;
       }
     }
-
-    // Deterministic PKP-style wallet (default for demo/development)
-    // This creates a wallet deterministically from phone number
-    // Secure and non-custodial, but not using Lit Protocol MPC
-    const seed = ethers.id(phoneNumber);
-    const wallet = new ethers.Wallet(seed);
-
-    logger.info(
-      { phoneNumber, address: wallet.address, method: "deterministic-pkp-style" },
-      "Generated deterministic PKP-style wallet"
-    );
-
-    return {
-      walletAddress: wallet.address,
-      publicKey: wallet.signingKey.publicKey
-    };
+    // If real PKP minting is not enabled, enforce configuration
+    throw new Error("USE_REAL_PKP_MINTING is false. Enable it and configure LIT_PKP_DEPLOYER_PRIVATE_KEY to mint real PKP.");
   } catch (error) {
     logger.error({ err: error, phoneNumber }, "Failed to generate PKP wallet");
     throw error;
