@@ -5,7 +5,7 @@
 
 set -e
 
-echo "🚀 OfflinePay Setup Script"
+echo "OfflinePay Setup Script"
 echo "=========================="
 echo ""
 
@@ -17,77 +17,77 @@ NC='\033[0m' # No Color
 
 # Check if pnpm is installed
 if ! command -v pnpm &> /dev/null; then
-    echo -e "${RED}❌ pnpm is not installed${NC}"
+    echo -e "${RED}pnpm is not installed${NC}"
     echo "Install it with: npm install -g pnpm"
     exit 1
 fi
 
-echo -e "${GREEN}✓ pnpm found${NC}"
+echo -e "${GREEN}pnpm found${NC}"
 
 # Check if MongoDB is running
 if ! pgrep -x "mongod" > /dev/null; then
-    echo -e "${YELLOW}⚠ MongoDB is not running${NC}"
+    echo -e "${YELLOW}MongoDB is not running${NC}"
     echo "Start it with: mongod --dbpath ~/data/db"
 else
-    echo -e "${GREEN}✓ MongoDB is running${NC}"
+    echo -e "${GREEN}MongoDB is running${NC}"
 fi
 
 # Install dependencies
 echo ""
-echo "📦 Installing dependencies..."
+echo "Installing dependencies..."
 pnpm install
 
 # Check for .env files
 echo ""
-echo "🔐 Checking environment configuration..."
+echo "Checking environment configuration..."
 
 if [ ! -f "backend/.env" ]; then
-    echo -e "${YELLOW}⚠ backend/.env not found${NC}"
+    echo -e "${YELLOW}backend/.env not found${NC}"
     echo "Copying from .env.example..."
     cp backend/.env.example backend/.env
-    echo -e "${RED}⚠ Please edit backend/.env with your actual credentials${NC}"
+    echo -e "${RED}Please edit backend/.env with your actual credentials${NC}"
 fi
 
 if [ ! -f "vincent-ability/.env" ]; then
-    echo -e "${YELLOW}⚠ vincent-ability/.env not found${NC}"
+    echo -e "${YELLOW}vincent-ability/.env not found${NC}"
     echo "Copying from .env.example..."
     cp vincent-ability/.env.example vincent-ability/.env
-    echo -e "${RED}⚠ Please edit vincent-ability/.env with your Pinata JWT${NC}"
+    echo -e "${RED}Please edit vincent-ability/.env with your Pinata JWT${NC}"
 fi
 
 # Build contracts
 echo ""
-echo "🔨 Compiling smart contracts..."
+echo "Compiling smart contracts..."
 cd contracts
 pnpm install
 npx hardhat compile
 cd ..
 
-echo -e "${GREEN}✓ Contracts compiled${NC}"
+echo -e "${GREEN}Contracts compiled${NC}"
 
 # Build Vincent abilities
 echo ""
-echo "🔨 Building Vincent abilities..."
+echo "Building Vincent abilities..."
 cd vincent-ability
 pnpm install
 pnpm build
 cd ..
 
-echo -e "${GREEN}✓ Vincent abilities built${NC}"
+echo -e "${GREEN}Vincent abilities built${NC}"
 
 # Build backend
 echo ""
-echo "🔨 Building backend..."
+echo "Building backend..."
 cd backend
 pnpm install
 cd ..
 
-echo -e "${GREEN}✓ Backend ready${NC}"
+echo -e "${GREEN}Backend ready${NC}"
 
 # Summary
 echo ""
 echo "=========================="
-echo -e "${GREEN}✅ Setup Complete!${NC}"
+echo -e "${GREEN}Setup Complete!${NC}"
 echo "=========================="
 echo ""
 echo "Next steps:"

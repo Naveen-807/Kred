@@ -42,10 +42,10 @@ if (!PINATA_JWT) {
       );
     }
 
-    console.log('✅ Successfully deployed Lit Action');
+    console.log(' Successfully deployed Lit Action');
     console.log(`ℹ️  Deployed ${outputFile} to IPFS: ${ipfsCid}`);
   } catch (error) {
-    console.error('❌ Error in deploy process:', error);
+    console.error(' Error in deploy process:', error);
     process.exit(1);
   }
 })();

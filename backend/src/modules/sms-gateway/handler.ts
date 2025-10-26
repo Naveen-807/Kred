@@ -67,7 +67,7 @@ export async function handleSMSFromGateway(
 function generateResponseSMS(result: any): string {
   // Override based on result type
   if (result.walletCreated) {
-    return `✅ Wallet created! Address: ${result.walletAddress.substring(0, 10)}... Set your PIN to start.`;
+    return ` Wallet created! Address: ${result.walletAddress.substring(0, 10)}... Set your PIN to start.`;
   }
 
   if (result.otpSent) {
@@ -75,7 +75,7 @@ function generateResponseSMS(result: any): string {
   }
 
   if (result.paymentSuccess) {
-    return `✅ Payment of ${result.amount} sent! TX: ${result.txHash.substring(0, 20)}...`;
+    return ` Payment of ${result.amount} sent! TX: ${result.txHash.substring(0, 20)}...`;
   }
 
   return result.message || "Command processed";

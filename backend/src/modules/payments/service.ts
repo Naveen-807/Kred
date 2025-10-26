@@ -18,7 +18,7 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
       recipient: command.recipientPhone, 
       amount: command.amount, 
       currency: command.currency 
-    }, "💸 PAY FLOW - Starting transaction");
+    }, " PAY FLOW - Starting transaction");
     
     const user = await getUserByPhoneNumber(phoneNumber);
     if (!user) {
@@ -33,7 +33,7 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
     logger.info({ 
       senderWallet: user.walletAddress, 
       senderPhone: phoneNumber 
-    }, "✅ Sender wallet verified");
+    }, " Sender wallet verified");
 
     const recipient = await findOrCreateUser(command.recipientPhone);
     if (!recipient.walletAddress) {
@@ -44,7 +44,7 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
     logger.info({ 
       recipientWallet: recipient.walletAddress, 
       recipientPhone: command.recipientPhone 
-    }, "✅ Recipient wallet verified");
+    }, " Recipient wallet verified");
 
     // Step 1: Get current INR/USD price from Pyth (with on-chain update!)
     logger.info({ currency: command.currency, amount: command.amount }, "🔮 [PYTH NETWORK] Fetching real-time price with on-chain update...");
@@ -69,8 +69,8 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
           pythTxHash: txHash || "N/A",
           source: onChainUpdated ? "On-Chain Pyth Contract" : "Pyth Hermes API"
         }, onChainUpdated 
-          ? "✅✅✅ [PYTH NETWORK] PRICE FETCHED AND UPDATED ON-CHAIN" 
-          : "✅ [PYTH NETWORK] PRICE CONVERSION COMPLETE");
+          ? " [PYTH NETWORK] PRICE FETCHED AND UPDATED ON-CHAIN" 
+          : " [PYTH NETWORK] PRICE CONVERSION COMPLETE");
         try {
           patchUIMessage(phoneNumber, { inrUsdPrice, pythTxHash: txHash, status: "PYTH_OK" });
         } catch {}
@@ -93,7 +93,7 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
         from: user.walletAddress,
         to: recipient.walletAddress,
         amount: pyusdAmount
-      }, "🚀 [LIT PROTOCOL] Executing Vincent ability...");
+      }, " [LIT PROTOCOL] Executing Vincent ability...");
       
       vincentResult = await executeAaveWithdrawAndSend(
         user.walletAddress,
@@ -111,20 +111,20 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
           txHash: txId,
           withdrawTx: vincentResult.withdrawTxHash,
           transferTx: vincentResult.transferTxHash
-        }, "✅ [LIT PROTOCOL + VINCENT] DeFi automation SUCCESSFUL");
+        }, " [LIT PROTOCOL + VINCENT] DeFi automation SUCCESSFUL");
       } else {
         // Fallback to direct Hedera transfer
         logger.warn({ error: vincentResult.error }, "⚠️ [VINCENT] Execution failed, using Hedera fallback");
         logger.info({ to: recipient.walletAddress, amount: pyusdAmount }, "⛓️  [HEDERA] Executing direct PYUSD transfer...");
         txId = await executePyusdTransfer(recipient.walletAddress, pyusdAmount);
-        logger.info({ txId }, "✅ [HEDERA] Transfer complete");
+        logger.info({ txId }, " [HEDERA] Transfer complete");
       }
     } else {
       // Fallback: Direct Hedera transfer (for demo without Vincent config)
       logger.info({}, "ℹ️  [VINCENT] Not configured, using direct Hedera");
       logger.info({ to: recipient.walletAddress, amount: pyusdAmount }, "⛓️  [HEDERA] Executing PYUSD transfer...");
       txId = await executePyusdTransfer(recipient.walletAddress, pyusdAmount);
-      logger.info({ txId }, "✅ [HEDERA] Transfer complete");
+      logger.info({ txId }, " [HEDERA] Transfer complete");
     }
 
     // Reflect transaction hash to UI for terminal dashboard
@@ -145,7 +145,7 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
     logger.info({ 
       sbtTxId,
       recipient: recipient.walletAddress
-    }, "✅ [HEDERA SBT] NFT minted successfully");
+    }, " [HEDERA SBT] NFT minted successfully");
     try {
       patchUIMessage(phoneNumber, { status: "SBT_MINTED" });
     } catch {}
@@ -173,7 +173,7 @@ export async function executePayFlow(phoneNumber: string, command: PayCommand) {
 
     await sendGenericSms(
       recipient.phoneNumber,
-      `✓ Payment received!\n${command.amount} ${command.currency} from ${phoneNumber}\nSBT: ${sbtTxId}\nTX: ${hashscanLink}\n💰 Auto-earning yield!`
+      `✓ Payment received!\n${command.amount} ${command.currency} from ${phoneNumber}\nSBT: ${sbtTxId}\nTX: ${hashscanLink}\n Auto-earning yield!`
     );
 
     // Step 6: AUTO-YIELD - Automatically supply received funds to Aave

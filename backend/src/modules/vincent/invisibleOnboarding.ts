@@ -138,7 +138,7 @@ async function delegateAbilitiesToApp(
       
       logger.info(
         { walletAddress, phoneNumber, appId: config.vincent.appId },
-        "✅ Abilities available for delegation - user can execute via Vincent App"
+        " Abilities available for delegation - user can execute via Vincent App"
       );
       
       return true;
@@ -172,7 +172,7 @@ async function delegateAbilitiesToApp(
  */
 export async function invisibleOnboarding(phoneNumber: string): Promise<void> {
   try {
-    logger.info({ phoneNumber }, "🚀 Starting invisible onboarding for new user");
+    logger.info({ phoneNumber }, " Starting invisible onboarding for new user");
 
     // Check if user already exists
     const existingUser = await UserModel.findOne({ phoneNumber });
@@ -208,7 +208,7 @@ export async function invisibleOnboarding(phoneNumber: string): Promise<void> {
     // STEP 4: Send welcome SMS
     logger.info({ phoneNumber, walletAddress }, "Step 4: Sending welcome SMS");
     const welcomeMessage = 
-      `🎉 Welcome to OfflinePay!\n\n` +
+      ` Welcome to OfflinePay!\n\n` +
       `Your secure digital wallet is now active.\n\n` +
       `Wallet: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}\n\n` +
       `You can now:\n` +
@@ -228,11 +228,11 @@ export async function invisibleOnboarding(phoneNumber: string): Promise<void> {
         delegated,
         duration: "invisible_instant"
       },
-      "✅ Invisible onboarding complete! User has non-custodial wallet and can receive money."
+      " Invisible onboarding complete! User has non-custodial wallet and can receive money."
     );
 
   } catch (error) {
-    logger.error({ err: error, phoneNumber }, "❌ Invisible onboarding failed");
+    logger.error({ err: error, phoneNumber }, " Invisible onboarding failed");
     
     // Send error SMS
     await sendGenericSms(
@@ -263,7 +263,7 @@ export async function handleMissedCall(phoneNumber: string): Promise<void> {
     const isNew = await isNewUser(phoneNumber);
     
     if (isNew) {
-      logger.info({ phoneNumber }, "🆕 New user detected - starting invisible onboarding");
+      logger.info({ phoneNumber }, " New user detected - starting invisible onboarding");
       await invisibleOnboarding(phoneNumber);
     } else {
       logger.info({ phoneNumber }, "👤 Existing user - sending help message");

@@ -58,20 +58,32 @@ export async function executeVincentPayment(
       "Executing Vincent payment"
     );
 
-    // Generate a mock transaction hash for demo
-    // TODO: Integrate with actual Vincent SDK once configured
+    const vincent = getVincentSdk();
     const commandId = `pay-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    const mockTxHash = `0x${ethers.id(commandId).slice(2, 66)}`;
 
-    logger.warn(
-      { mockTxHash, commandId },
-      "Using mock transaction - Vincent SDK not fully configured"
+    // Execute real Vincent SDK payment
+    const result = await vincent.executeAbility({
+      abilityId: process.env.VINCENT_ABILITY_NATIVE_SEND!,
+      params: {
+        amount: formatToTokenDecimals(pyusdAmount),
+        recipientWallet: recipientWallet,
+        userWallet: senderWallet
+      },
+      commandId: commandId
+    });
+
+    logger.info(
+      { result, commandId },
+      "Vincent payment executed successfully"
     );
 
-    // Simulate blockchain delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Extract transaction hash from result
+    const txHash = result?.transactionHash || result?.txHash || result?.hash;
+    if (!txHash) {
+      throw new Error("No transaction hash returned from Vincent SDK");
+    }
 
-    return mockTxHash;
+    return txHash;
   } catch (error) {
     logger.error({ err: error, sender: senderWallet, recipient: recipientWallet }, "Vincent payment failed");
     throw error;

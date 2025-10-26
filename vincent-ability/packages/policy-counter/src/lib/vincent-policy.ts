@@ -41,7 +41,7 @@ export const vincentPolicy = createVincentPolicy({
     { allow, deny, appId, delegation: { delegatorPkpInfo } },
   ) => {
     console.log(
-      '[@lit-protocol/vincent-example-policy-counter/precheck] 🔍 Policy precheck params:',
+      '[@lit-protocol/vincent-example-policy-counter/precheck]  Policy precheck params:',
       {
         abilityParams,
         userParams,
@@ -96,14 +96,14 @@ export const vincentPolicy = createVincentPolicy({
       remainingSends: limitCheck.remainingSends,
     };
 
-    console.log('[SendLimitPolicy/precheck] ✅ POLICY PRECHECK ALLOWING REQUEST:');
+    console.log('[SendLimitPolicy/precheck]  POLICY PRECHECK ALLOWING REQUEST:');
     console.log(
-      '[SendLimitPolicy/precheck] ✅ Allow result:',
+      '[SendLimitPolicy/precheck]  Allow result:',
       JSON.stringify(allowResult, null, 2),
     );
-    console.log('[SendLimitPolicy/precheck] ✅ Current count:', limitCheck.currentCount);
-    console.log('[SendLimitPolicy/precheck] ✅ Max sends:', maxSends);
-    console.log('[SendLimitPolicy/precheck] ✅ Remaining sends:', limitCheck.remainingSends);
+    console.log('[SendLimitPolicy/precheck]  Current count:', limitCheck.currentCount);
+    console.log('[SendLimitPolicy/precheck]  Max sends:', maxSends);
+    console.log('[SendLimitPolicy/precheck]  Remaining sends:', limitCheck.remainingSends);
 
     return allow(allowResult);
   },
@@ -189,7 +189,7 @@ export const vincentPolicy = createVincentPolicy({
     const { ethAddress } = delegatorPkpInfo;
 
     console.log(
-      '[@lit-protocol/vincent-example-policy-counter/commit] 🚀 Committing counter update.',
+      '[@lit-protocol/vincent-example-policy-counter/commit]  Committing counter update.',
     );
 
     // Check if we need to reset the counter first

@@ -74,7 +74,7 @@ class SMSQueueService {
     message.status = 'sent';
     message.sentAt = new Date();
     
-    logger.info({ messageId, to: message.to }, '✅ SMS marked as sent');
+    logger.info({ messageId, to: message.to }, ' SMS marked as sent');
     
     // Clean up old sent messages after 5 minutes
     setTimeout(() => {
@@ -100,7 +100,7 @@ class SMSQueueService {
 
     if (message.attempts >= message.maxAttempts) {
       message.status = 'failed';
-      logger.error({ messageId, to: message.to, error, attempts: message.attempts }, '❌ SMS failed permanently');
+      logger.error({ messageId, to: message.to, error, attempts: message.attempts }, ' SMS failed permanently');
       
       // Clean up failed messages after 1 hour
       setTimeout(() => {

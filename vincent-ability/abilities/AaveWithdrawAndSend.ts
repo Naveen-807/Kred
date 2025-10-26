@@ -72,7 +72,7 @@ export async function aaveWithdrawAndSend(
     const config = NETWORK_CONFIG[network];
     
     console.log("🔄 Starting AaveWithdrawAndSend ability...");
-    console.log("📊 Parameters:", {
+    console.log(" Parameters:", {
       recipient: params.recipient,
       amount: params.amount,
       network
@@ -89,7 +89,7 @@ export async function aaveWithdrawAndSend(
     );
     
     const aTokenBalance = await aTokenContract.balanceOf(await signer.getAddress());
-    console.log("💰 aToken Balance:", ethers.formatUnits(aTokenBalance, 6), "aPYUSD");
+    console.log(" aToken Balance:", ethers.formatUnits(aTokenBalance, 6), "aPYUSD");
     
     if (aTokenBalance < amountWei) {
       throw new Error(`Insufficient aToken balance. Have: ${ethers.formatUnits(aTokenBalance, 6)}, Need: ${params.amount}`);
@@ -109,12 +109,12 @@ export async function aaveWithdrawAndSend(
       await signer.getAddress()
     );
     
-    console.log("⏳ Waiting for withdraw confirmation...");
+    console.log(" Waiting for withdraw confirmation...");
     const withdrawReceipt = await withdrawTx.wait();
-    console.log("✅ Withdrawn from Aave:", withdrawReceipt.hash);
+    console.log(" Withdrawn from Aave:", withdrawReceipt.hash);
 
     // Step 3: Transfer PYUSD to recipient
-    console.log("💸 Transferring to recipient...");
+    console.log(" Transferring to recipient...");
     const pyusdContract = new ethers.Contract(
       config.pyusd,
       ERC20_ABI,
@@ -126,9 +126,9 @@ export async function aaveWithdrawAndSend(
       amountWei
     );
     
-    console.log("⏳ Waiting for transfer confirmation...");
+    console.log(" Waiting for transfer confirmation...");
     const transferReceipt = await transferTx.wait();
-    console.log("✅ Transferred to recipient:", transferReceipt.hash);
+    console.log(" Transferred to recipient:", transferReceipt.hash);
 
     return {
       success: true,
@@ -136,7 +136,7 @@ export async function aaveWithdrawAndSend(
       transferTxHash: transferReceipt.hash
     };
   } catch (error) {
-    console.error("❌ AaveWithdrawAndSend failed:", error);
+    console.error(" AaveWithdrawAndSend failed:", error);
     return {
       success: false,
       error: (error as Error).message
@@ -165,7 +165,7 @@ export async function autoSupplyToAave(
     const config = NETWORK_CONFIG[network];
     
     console.log("🔄 Auto-supplying to Aave for yield...");
-    console.log("📊 Amount:", params.amount, "PYUSD");
+    console.log(" Amount:", params.amount, "PYUSD");
 
     const amountWei = ethers.parseUnits(params.amount, 6);
     const signerAddress = await signer.getAddress();
@@ -183,7 +183,7 @@ export async function autoSupplyToAave(
       amountWei
     );
     await approveTx.wait();
-    console.log("✅ Approved");
+    console.log(" Approved");
 
     // Step 2: Supply to Aave
     console.log("🏦 Supplying to Aave...");
@@ -200,17 +200,17 @@ export async function autoSupplyToAave(
       0 // referral code
     );
     
-    console.log("⏳ Waiting for supply confirmation...");
+    console.log(" Waiting for supply confirmation...");
     const receipt = await supplyTx.wait();
-    console.log("✅ Supplied to Aave:", receipt.hash);
-    console.log("💰 Now earning yield automatically!");
+    console.log(" Supplied to Aave:", receipt.hash);
+    console.log(" Now earning yield automatically!");
 
     return {
       success: true,
       txHash: receipt.hash
     };
   } catch (error) {
-    console.error("❌ Auto-supply failed:", error);
+    console.error(" Auto-supply failed:", error);
     return {
       success: false,
       error: (error as Error).message

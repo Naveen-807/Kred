@@ -113,11 +113,11 @@ export const vincentAbility = createVincentAbility({
 
       if (sendLimitPolicyContext) {
         console.log(
-          `[@lit-protocol/vincent-example-ability-native-send/execute] ✅ Found send limit policy context. The policy was enabled for ${delegation.delegatorPkpInfo.ethAddress}`,
+          `[@lit-protocol/vincent-example-ability-native-send/execute]  Found send limit policy context. The policy was enabled for ${delegation.delegatorPkpInfo.ethAddress}`,
         );
 
         console.log(
-          '[@lit-protocol/vincent-example-ability-native-send/execute] ✅ Policy evaluation result:',
+          '[@lit-protocol/vincent-example-ability-native-send/execute]  Policy evaluation result:',
           sendLimitPolicyContext.result,
         );
 
@@ -133,24 +133,24 @@ export const vincentAbility = createVincentAbility({
         };
 
         console.log(
-          '[@lit-protocol/vincent-example-ability-native-send/execute] ✅ Available in sendLimitPolicyContext:',
+          '[@lit-protocol/vincent-example-ability-native-send/execute]  Available in sendLimitPolicyContext:',
           Object.keys(sendLimitPolicyContext),
         );
         console.log(
-          '[@lit-protocol/vincent-example-ability-native-send/execute] ✅ Calling commit with explicit parameters (ignoring TS signature)...',
+          '[@lit-protocol/vincent-example-ability-native-send/execute]  Calling commit with explicit parameters (ignoring TS signature)...',
         );
 
         const commitResult = await sendLimitPolicyContext.commit(commitParams);
         console.log(
-          '[@lit-protocol/vincent-example-ability-native-send/execute] ✅ Policy commit result:',
+          '[@lit-protocol/vincent-example-ability-native-send/execute]  Policy commit result:',
           commitResult,
         );
       } else {
         console.log(
-          '[@lit-protocol/vincent-example-ability-native-send/execute] ❌ Send limit policy context not found in policiesContext.allowedPolicies',
+          '[@lit-protocol/vincent-example-ability-native-send/execute]  Send limit policy context not found in policiesContext.allowedPolicies',
         );
         console.log(
-          '[@lit-protocol/vincent-example-ability-native-send/execute] ❌ Available policies:',
+          '[@lit-protocol/vincent-example-ability-native-send/execute]  Available policies:',
           Object.keys(policiesContext.allowedPolicies || {}),
         );
       }

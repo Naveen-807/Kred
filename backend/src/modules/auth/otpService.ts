@@ -69,7 +69,7 @@ export async function generateOtpOnChain(phoneNumber: string): Promise<OtpResult
       logger.info({ 
         txHash: receipt.transactionHash,
         blockNumber: receipt.blockNumber
-      }, "✅ [PYTH ENTROPY] OTP request submitted on-chain");
+      }, " [PYTH ENTROPY] OTP request submitted on-chain");
       
       // Wait for callback processing
       await new Promise(resolve => setTimeout(resolve, 3000));
@@ -83,7 +83,7 @@ export async function generateOtpOnChain(phoneNumber: string): Promise<OtpResult
           otp: otp.toString(),
           txHash: receipt.transactionHash,
           expiresAt: new Date(expiresAt.toNumber() * 1000).toISOString()
-        }, "✅✅✅ [PYTH ENTROPY] ON-CHAIN OTP GENERATED SUCCESSFULLY");
+        }, " [PYTH ENTROPY] ON-CHAIN OTP GENERATED SUCCESSFULLY");
         
         return {
           otp: otp.toString(),
@@ -95,7 +95,7 @@ export async function generateOtpOnChain(phoneNumber: string): Promise<OtpResult
       
       logger.warn({}, "⚠️ [PYTH ENTROPY] OTP not ready, falling back to local");
     } catch (error) {
-      logger.error({ err: error, phoneNumber }, "❌ [PYTH ENTROPY] On-chain generation failed, using fallback");
+      logger.error({ err: error, phoneNumber }, " [PYTH ENTROPY] On-chain generation failed, using fallback");
     }
   } else {
     logger.info({}, "ℹ️  [PYTH ENTROPY] On-chain disabled, using secure local generation");
@@ -113,7 +113,7 @@ export async function generateOtp(): Promise<OtpResult> {
     otp, 
     method: "crypto.randomInt",
     expirySeconds: config.security.otpExpirySeconds 
-  }, "✅ OTP generated via secure local fallback");
+  }, " OTP generated via secure local fallback");
 
   return {
     otp,
@@ -140,7 +140,7 @@ export async function autoVerifyOtpFromChain(phoneNumber: string): Promise<{
   }
 
   try {
-    logger.info({ phoneNumber }, "🔍 [AUTO-VERIFY] Reading OTP from blockchain...");
+    logger.info({ phoneNumber }, " [AUTO-VERIFY] Reading OTP from blockchain...");
     
     // Connect to Hedera
     const provider = new ethers.providers.JsonRpcProvider(
@@ -189,7 +189,7 @@ export async function autoVerifyOtpFromChain(phoneNumber: string): Promise<{
       otp: otp.toString(),
       expiresAt: new Date(expiresAtSeconds * 1000).toISOString(),
       remainingSeconds: expiresAtSeconds - now
-    }, "✅✅✅ [AUTO-VERIFY] OTP VERIFIED FROM BLOCKCHAIN - NO USER INPUT NEEDED!");
+    }, " [AUTO-VERIFY] OTP VERIFIED FROM BLOCKCHAIN - NO USER INPUT NEEDED!");
     
     return {
       verified: true,
@@ -197,7 +197,7 @@ export async function autoVerifyOtpFromChain(phoneNumber: string): Promise<{
     };
     
   } catch (error) {
-    logger.error({ err: error, phoneNumber }, "❌ [AUTO-VERIFY] Failed to read OTP from blockchain");
+    logger.error({ err: error, phoneNumber }, " [AUTO-VERIFY] Failed to read OTP from blockchain");
     return { verified: false, error: error.message };
   }
 }

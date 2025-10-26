@@ -50,7 +50,7 @@ export async function autoYieldOnReceive(
     if (result.success) {
       logger.info(
         { txHash: result.txHash, amount: amountPyusd },
-        "✅ Funds auto-supplied to Aave - now earning yield!"
+        " Funds auto-supplied to Aave - now earning yield!"
       );
 
       // Update user record to track yield
@@ -83,7 +83,7 @@ export async function getYieldSummary(phoneNumber: string): Promise<string> {
   try {
     const user = await UserModel.findOne({ phoneNumber });
     if (!user || !user.yieldStats) {
-      return "💰 Yield: Not yet earning (send/receive payments to start)";
+      return " Yield: Not yet earning (send/receive payments to start)";
     }
 
     const totalSupplied = user.yieldStats.totalSupplied || 0;
@@ -91,13 +91,13 @@ export async function getYieldSummary(phoneNumber: string): Promise<string> {
     const estimatedYearlyYield = totalSupplied * (estimatedApy / 100);
     const estimatedDailyYield = estimatedYearlyYield / 365;
 
-    return `💰 Yield Stats:
+    return ` Yield Stats:
 Supplied: $${totalSupplied.toFixed(2)} PYUSD
 Est. APY: ${estimatedApy}%
 Est. Daily: $${estimatedDailyYield.toFixed(4)}
-Your money is working for you! 🚀`;
+Your money is working for you! `;
   } catch (error) {
     logger.error({ err: error, phoneNumber }, "Failed to get yield summary");
-    return "💰 Yield: Unable to fetch stats";
+    return " Yield: Unable to fetch stats";
   }
 }

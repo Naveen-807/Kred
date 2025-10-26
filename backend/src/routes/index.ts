@@ -3,6 +3,7 @@ import type { Express } from "express";
 import { smsGatewayRouter } from "./sms-gateway.js";
 import smsSimpleRouter from "./sms-simple.js";
 import smsMobileAPIRouter from "./smsmobileapi.js";
+import { internalApiRouter } from "./internal-api.js";
 
 export function registerRoutes(app: Express) {
   app.get("/health", (_req, res) => {
@@ -18,4 +19,7 @@ export function registerRoutes(app: Express) {
   // SMS Gateway management routes
   app.use("/webhook", smsGatewayRouter);  // SMS Gateway routes
   app.use("/api/gateway", smsGatewayRouter);  // Gateway management
+  
+  // Internal API for ASI Agents
+  app.use("/api/internal", internalApiRouter);
 }

@@ -86,7 +86,7 @@ export async function getInrUsdPriceWithOnChainUpdate(): Promise<{
         logger.info({ 
           updateFee: ethers.utils.formatEther(updateFee),
           priceFeeds: priceIds.length 
-        }, "💰 [PYTH] Update fee calculated");
+        }, " [PYTH] Update fee calculated");
 
         // Update price on-chain
         const tx = await pythContract.updatePriceFeeds(priceFeedUpdateData, {
@@ -100,7 +100,7 @@ export async function getInrUsdPriceWithOnChainUpdate(): Promise<{
           txHash: receipt.transactionHash,
           blockNumber: receipt.blockNumber,
           gasUsed: receipt.gasUsed.toString()
-        }, "✅✅✅ [PYTH] PRICE UPDATED ON-CHAIN SUCCESSFULLY");
+        }, " [PYTH] PRICE UPDATED ON-CHAIN SUCCESSFULLY");
 
         return {
           price: usdPerInr,
@@ -112,14 +112,14 @@ export async function getInrUsdPriceWithOnChainUpdate(): Promise<{
       }
     }
 
-    logger.info({ price: usdPerInr, source: "Hermes API" }, "✅ [PYTH] Price fetched from Hermes");
+    logger.info({ price: usdPerInr, source: "Hermes API" }, " [PYTH] Price fetched from Hermes");
     return {
       price: usdPerInr,
       onChainUpdated: false
     };
 
   } catch (error) {
-    logger.error({ err: error }, "❌ [PYTH] Price fetch failed");
+    logger.error({ err: error }, " [PYTH] Price fetch failed");
     const fallbackRate = 0.012;
     return {
       price: fallbackRate,

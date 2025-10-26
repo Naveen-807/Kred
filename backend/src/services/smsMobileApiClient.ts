@@ -50,14 +50,14 @@ export async function sendSMSToUser(phoneNumber: string, message: string): Promi
     const apiKey = process.env.SMSMOBILEAPI_KEY;
     
     if (!apiKey) {
-      console.error('❌ SMSMOBILEAPI_KEY not configured');
+      console.error(' SMSMOBILEAPI_KEY not configured');
       return false;
     }
 
     const normalizedPhone = normalizePhoneNumber(phoneNumber);
     
     if (!isValidIndianNumber(normalizedPhone)) {
-      console.error('❌ Invalid phone number format:', phoneNumber);
+      console.error(' Invalid phone number format:', phoneNumber);
       return false;
     }
 
@@ -81,18 +81,18 @@ export async function sendSMSToUser(phoneNumber: string, message: string): Promi
       }
     );
 
-    console.log('✅ SMSMobileAPI response:', response.data);
+    console.log(' SMSMobileAPI response:', response.data);
     return true;
     
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error('❌ SMSMobileAPI error:', {
+      console.error(' SMSMobileAPI error:', {
         message: error.message,
         status: error.response?.status,
         data: error.response?.data
       });
     } else {
-      console.error('❌ Failed to send SMS:', error);
+      console.error(' Failed to send SMS:', error);
     }
     return false;
   }
@@ -106,7 +106,7 @@ export async function getReceivedSMS(onlyUnread: boolean = true): Promise<any[]>
     const apiKey = process.env.SMSMOBILEAPI_KEY;
     
     if (!apiKey) {
-      console.error('❌ SMSMOBILEAPI_KEY not configured');
+      console.error(' SMSMOBILEAPI_KEY not configured');
       return [];
     }
 
@@ -123,7 +123,7 @@ export async function getReceivedSMS(onlyUnread: boolean = true): Promise<any[]>
     return response.data || [];
     
   } catch (error) {
-    console.error('❌ Failed to get SMS:', error);
+    console.error(' Failed to get SMS:', error);
     return [];
   }
 }

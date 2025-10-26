@@ -14,7 +14,7 @@ export async function getLitContractsClient({
   let instance = instancesByWallet.get(wallet);
   if (instance) {
     // connect() is idempotent; if we're retrying from outside, attempt to connect again
-    // This is a no-op if already connected 🎉 but if a prior attempt fails, it'll try again.
+    // This is a no-op if already connected  but if a prior attempt fails, it'll try again.
     await instance.connect();
     return instance.litContracts;
   }

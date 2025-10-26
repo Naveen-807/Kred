@@ -158,14 +158,14 @@ const wrapIIFEInStringPlugin = {
           const mbInDecimal = (bytes / 1_000_000).toFixed(4);
 
           console.log(
-            `✅ ${file.path.split('/').pop()}\n- ${mbInDecimal} MB (in decimal)\n- ${mbInBinary} MB (in binary)`,
+            ` ${file.path.split('/').pop()}\n- ${mbInDecimal} MB (in decimal)\n- ${mbInBinary} MB (in binary)`,
           );
         });
       });
 
-    console.log('✅ Vincent ability built successfully');
+    console.log(' Vincent ability built successfully');
   } catch (e) {
-    console.error('❌ Error building Vincent ability: ', e);
+    console.error(' Error building Vincent ability: ', e);
     process.exit(1);
   }
 })();

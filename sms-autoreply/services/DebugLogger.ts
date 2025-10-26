@@ -29,10 +29,10 @@ class DebugLogger {
 
     // Console output with colors/emojis
     const emoji = {
-      info: 'ℹ️',
-      success: '✅',
-      warning: '⚠️',
-      error: '❌',
+      info: 'INFO',
+      success: 'SUCCESS',
+      warning: 'WARNING',
+      error: 'ERROR',
     }[level];
 
     const prefix = `${emoji} [${category}]`;

@@ -51,7 +51,7 @@ export async function initiateCommandWithAutoOtp(
       
       await sendGenericSms(
         phoneNumber, 
-        "🔐 Payment initiated. Enter your PIN to confirm.\n✅ Secured by Pyth Entropy"
+        "🔐 Payment initiated. Enter your PIN to confirm.\n Secured by Pyth Entropy"
       );
       try { 
         storeUIMessage(
@@ -68,7 +68,7 @@ export async function initiateCommandWithAutoOtp(
   
   // Fallback to manual OTP if auto-verify fails
   const otpMessage = isOnChain 
-    ? `${templates.otp(otp)}\n✅ Pyth Entropy Secured`
+    ? `${templates.otp(otp)}\n Pyth Entropy Secured`
     : templates.otp(otp);
   
   await sendGenericSms(phoneNumber, otpMessage);
@@ -90,7 +90,7 @@ export async function initiateCommandWithOtp(
   
   // Send OTP with indicator of on-chain generation
   const otpMessage = isOnChain 
-    ? `${templates.otp(otp)}\n✅ Pyth Entropy Secured`
+    ? `${templates.otp(otp)}\n Pyth Entropy Secured`
     : templates.otp(otp);
   
   await sendGenericSms(phoneNumber, otpMessage);

@@ -91,7 +91,7 @@ export async function generateUserWallet(phoneNumber: string): Promise<{
             tokenId: pkpInfo.tokenId,
             method: "real-pkp-minting" 
           },
-          "✅ Real PKP NFT minted successfully via Lit Protocol"
+          " Real PKP NFT minted successfully via Lit Protocol"
         );
         
         return {

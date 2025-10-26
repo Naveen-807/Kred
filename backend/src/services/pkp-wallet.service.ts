@@ -59,7 +59,7 @@ export class PKPWalletService {
       });
 
       await this.litNodeClient.connect();
-      logger.info('✅ Connected to Lit Network (datil-test)');
+      logger.info('Connected to Lit Network (datil-test)');
 
       // Initialize Lit Contracts
       this.litContracts = new LitContracts({
@@ -68,12 +68,12 @@ export class PKPWalletService {
       });
 
       await this.litContracts.connect();
-      logger.info('✅ Connected to Lit Contracts');
+      logger.info('Connected to Lit Contracts');
 
       this.isInitialized = true;
-      logger.info('✅ PKP Wallet Service initialized successfully');
+      logger.info('PKP Wallet Service initialized successfully');
     } catch (error) {
-      logger.error('❌ Failed to initialize PKP Wallet Service:', error);
+      logger.error({ err: error }, 'Failed to initialize PKP Wallet Service');
       throw error;
     }
   }
@@ -93,16 +93,20 @@ export class PKPWalletService {
       // Mint PKP using Lit Contracts SDK
       const mintTx = await this.litContracts!.pkpNftContractUtils.write.mint();
 
-      logger.info('⏳ Waiting for mint transaction...');
-      const mintReceipt = await mintTx.wait();
+      logger.info('Waiting for mint transaction...');
+      const txHash = mintTx.tx?.hash;
+      if (txHash) {
+        await this.provider.waitForTransaction(txHash);
+        logger.info({ txHash }, 'PKP mint transaction confirmed');
+      }
 
-      // Extract PKP info from mint receipt
-      const pkpInfo = mintReceipt.pkp;
+      // Extract PKP info from mint result
+      const pkpInfo = mintTx.pkp;
       const tokenId = pkpInfo.tokenId;
       const publicKey = pkpInfo.publicKey;
       const ethAddress = pkpInfo.ethAddress;
 
-      logger.info(`✅ PKP Minted!`);
+      logger.info(`PKP Minted!`);
       logger.info(`   Token ID: ${tokenId}`);
       logger.info(`   Public Key: ${publicKey}`);
       logger.info(`   ETH Address: ${ethAddress}`);
@@ -112,26 +116,24 @@ export class PKPWalletService {
       
       await this.litContracts!.addPermittedAuthMethod({
         pkpTokenId: tokenId,
-        authMethodType: AuthMethodType.EthWallet,
+        authMethodType: AUTH_METHOD_TYPE.EthWallet,
         authMethodId: authMethodId,
-        authMethodScopes: [AuthMethodScope.SignAnything],
+        authMethodScopes: [AUTH_METHOD_SCOPE.SignAnything],
       });
 
-      logger.info('✅ Auth method added');
+      logger.info('Auth method added');
 
       // Store in database
-      const pkpWallet = await prisma.pKPWallet.create({
-        data: {
-          phoneNumber,
-          tokenId,
-          publicKey,
-          ethAddress,
-          authMethodId,
-          network: 'datil-test',
-        },
+      const pkpWallet = await PKPWallet.create({
+        phoneNumber,
+        tokenId,
+        publicKey,
+        ethAddress,
+        authMethodId,
+        network: 'datil-test',
       });
 
-      logger.info(`✅ PKP wallet saved to database for ${phoneNumber}`);
+      logger.info(`PKP wallet saved to database for ${phoneNumber}`);
 
       return {
         tokenId,
@@ -140,8 +142,31 @@ export class PKPWalletService {
         phoneNumber,
       };
     } catch (error) {
-      logger.error(`❌ Error minting PKP for ${phoneNumber}:`, error);
+      logger.error({ err: error, phoneNumber }, `Error minting PKP for ${phoneNumber}`);
       throw error;
+    }
+  }
+
+  /**
+   * Get wallet address by phone number
+   */
+  async getWalletByPhone(phoneNumber: string): Promise<string | null> {
+    try {
+      logger.info({ phoneNumber }, 'Looking up wallet by phone number');
+      
+      const pkpWallet = await PKPWallet.findOne({ phoneNumber });
+      
+      if (pkpWallet) {
+        logger.info({ phoneNumber, ethAddress: pkpWallet.ethAddress }, 'Found existing wallet');
+        return pkpWallet.ethAddress;
+      }
+      
+      logger.info({ phoneNumber }, 'No wallet found for phone number');
+      return null;
+      
+    } catch (error) {
+      logger.error({ err: error, phoneNumber }, 'Error looking up wallet by phone');
+      return null;
     }
   }
 
@@ -150,12 +175,10 @@ export class PKPWalletService {
    */
   async getOrCreatePKP(phoneNumber: string): Promise<PKPWalletInfo> {
     // Check if PKP already exists
-    const existing = await prisma.pKPWallet.findUnique({
-      where: { phoneNumber },
-    });
+    const existing = await PKPWallet.findOne({ phoneNumber });
 
     if (existing) {
-      logger.info(`✅ PKP already exists for ${phoneNumber}`);
+      logger.info(`PKP already exists for ${phoneNumber}`);
       return {
         tokenId: existing.tokenId,
         publicKey: existing.publicKey,
@@ -165,7 +188,7 @@ export class PKPWalletService {
     }
 
     // Mint new PKP
-    logger.info(`🆕 Creating new PKP for ${phoneNumber}`);
+    logger.info(`Creating new PKP for ${phoneNumber}`);
     return await this.mintPKPForPhoneNumber(phoneNumber);
   }
 
@@ -173,9 +196,7 @@ export class PKPWalletService {
    * Get PKP balance
    */
   async getPKPBalance(phoneNumber: string): Promise<string> {
-    const pkp = await prisma.pKPWallet.findUnique({
-      where: { phoneNumber },
-    });
+    const pkp = await PKPWallet.findOne({ phoneNumber });
 
     if (!pkp) {
       throw new Error('PKP wallet not found for this phone number');
@@ -189,9 +210,7 @@ export class PKPWalletService {
    * Get PKP wallet info
    */
   async getPKPInfo(phoneNumber: string): Promise<PKPWalletInfo | null> {
-    const pkp = await prisma.pKPWallet.findUnique({
-      where: { phoneNumber },
-    });
+    const pkp = await PKPWallet.findOne({ phoneNumber });
 
     if (!pkp) {
       return null;
@@ -215,9 +234,7 @@ export class PKPWalletService {
   ): Promise<string> {
     await this.ensureInitialized();
 
-    const pkp = await prisma.pKPWallet.findUnique({
-      where: { phoneNumber },
-    });
+    const pkp = await PKPWallet.findOne({ phoneNumber });
 
     if (!pkp) {
       throw new Error('PKP wallet not found');
@@ -232,10 +249,22 @@ export class PKPWalletService {
           resource: {
             resource: '*',
             resourcePrefix: 'lit-pkp',
+            getResourceKey: () => 'lit-pkp:*',
+            isValidLitAbility: () => true,
           },
           ability: 'pkp-signing',
         },
       ],
+      authNeededCallback: async () => {
+        // Return mock auth signature for now - in production, implement proper auth
+        return {
+          sig: '0x',
+          derivedVia: 'web3.eth.personal.sign',
+          signedMessage: 'mock',
+          address: '0x',
+          algo: 'eth_personal_sign'
+        };
+      },
     });
 
     // Prepare transaction

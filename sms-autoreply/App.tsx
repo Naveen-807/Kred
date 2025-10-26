@@ -7,12 +7,9 @@ import {
   ScrollView,
   Switch,
   StatusBar,
-  TextInput,
-  Alert,
 } from 'react-native';
 import { smsReceiver, SMSMessage } from './services/SMSReceiver';
-import { smsSender } from './services/SMSSender';
-import { backendService } from './services/BackendService';
+import { nativeSMSSender } from './services/NativeSMSSender';
 import { debugLogger } from './services/DebugLogger';
 
 export default function App() {
@@ -20,15 +17,13 @@ export default function App() {
   const [messages, setMessages] = useState<SMSMessage[]>([]);
   const [initialized, setInitialized] = useState(false);
   const [permissionGranted, setPermissionGranted] = useState(false);
-  const [backendUrl, setBackendUrl] = useState('http://10.232.97.88:8080');
-  const [backendConnected, setBackendConnected] = useState(false);
 
   useEffect(() => {
     initializeApp();
   }, []);
 
   const initializeApp = async () => {
-    debugLogger.info('APP', 'Initializing SMS Gateway App');
+    debugLogger.info('APP', 'Initializing SMS Auto-Reply App');
     const granted = await smsReceiver.initialize();
     setPermissionGranted(granted);
     setInitialized(true);
@@ -40,64 +35,50 @@ export default function App() {
     }
   };
 
-  const testBackendConnection = async () => {
-    backendService.setBackendUrl(backendUrl);
-    const connected = await backendService.testConnection();
-    setBackendConnected(connected);
-    
-    if (connected) {
-      Alert.alert('✅ Connected', 'Backend connection successful!');
-    } else {
-      Alert.alert('❌ Failed', 'Could not connect to backend. Check the URL and ensure your Mac server is running.');
-    }
-  };
-
-  const toggleGateway = async () => {
+  const toggleAutoReply = async () => {
     if (!permissionGranted) {
       debugLogger.error('APP', 'Cannot toggle - permissions not granted');
       return;
     }
 
-    if (!backendConnected) {
-      Alert.alert('⚠️ Backend Not Connected', 'Please test backend connection first.');
-      return;
-    }
-
     if (isEnabled) {
+      // Stop listening
       smsReceiver.stopListening();
       setIsEnabled(false);
-      debugLogger.info('APP', 'SMS Gateway disabled');
+      debugLogger.info('APP', 'Auto-reply disabled');
     } else {
+      // Start listening
       smsReceiver.startListening(handleIncomingSMS);
       setIsEnabled(true);
-      debugLogger.info('APP', 'SMS Gateway enabled');
+      debugLogger.info('APP', 'Auto-reply enabled');
     }
   };
 
   const handleIncomingSMS = async (message: SMSMessage) => {
-    debugLogger.info('APP', 'SMS received, forwarding to backend', {
+    debugLogger.info('APP', 'Processing incoming SMS', {
       from: message.address,
       body: message.body,
     });
 
-    setMessages((prev: any) => [message, ...prev].slice(0, 50));
+    // Add to message list
+    setMessages((prev) => [message, ...prev].slice(0, 50)); // Keep last 50 messages
 
-    // Forward to backend
-    const result = await backendService.forwardSMS(message.address, message.body);
+    // Send auto-reply
+    if (isEnabled) {
+      const result = await nativeSMSSender.sendAutoReply(
+        message.address,
+        message.body
+      );
 
-    if (result.success && result.reply) {
-      debugLogger.info('APP', 'Backend replied, sending SMS', { reply: result.reply });
-      
-      // Send reply from backend
-      const sendResult = await smsSender.sendSMS(message.address, result.reply);
-      
-      if (sendResult.success) {
-        debugLogger.success('APP', 'Reply sent successfully');
+      if (result.success) {
+        debugLogger.success('APP', 'Auto-reply sent successfully', {
+          to: message.address,
+        });
       } else {
-        debugLogger.error('APP', 'Failed to send reply', { error: sendResult.error });
+        debugLogger.error('APP', 'Failed to send auto-reply', {
+          error: result.error,
+        });
       }
-    } else if (!result.success) {
-      debugLogger.error('APP', 'Backend error', { error: result.error });
     }
   };
 
@@ -114,7 +95,7 @@ export default function App() {
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
-        <Text style={styles.errorText}>❌ SMS Permissions Required</Text>
+        <Text style={styles.errorText}>SMS Permissions Required</Text>
         <Text style={styles.errorSubtext}>
           Please grant SMS permissions to use this app.
         </Text>
@@ -131,52 +112,30 @@ export default function App() {
       
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>📱 SMS Gateway</Text>
+        <Text style={styles.title}>📱 SMS Auto-Reply</Text>
         <Text style={styles.subtitle}>
           {isEnabled ? '🟢 Active' : '🔴 Inactive'}
         </Text>
       </View>
 
-      {/* Backend URL Configuration */}
-      <View style={styles.configContainer}>
-        <Text style={styles.configLabel}>Backend URL (Mac IP:Port)</Text>
-        <TextInput
-          style={styles.input}
-          value={backendUrl}
-          onChangeText={setBackendUrl}
-          placeholder="http://10.232.97.88:8080"
-          placeholderTextColor="#6b7280"
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-        <TouchableOpacity style={styles.testButton} onPress={testBackendConnection}>
-          <Text style={styles.testButtonText}>
-            {backendConnected ? '✅ Connected' : '🔍 Test Connection'}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
       {/* Toggle Switch */}
       <View style={styles.toggleContainer}>
-        <Text style={styles.toggleLabel}>SMS Gateway</Text>
+        <Text style={styles.toggleLabel}>Auto-Reply</Text>
         <Switch
           trackColor={{ false: '#767577', true: '#81b0ff' }}
           thumbColor={isEnabled ? '#4CAF50' : '#f4f3f4'}
           ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleGateway}
+          onValueChange={toggleAutoReply}
           value={isEnabled}
-          disabled={!backendConnected}
         />
       </View>
 
       {/* Status */}
       <View style={styles.statusContainer}>
         <Text style={styles.statusText}>
-          {!backendConnected
-            ? '⚠️ Backend not connected - test connection first'
-            : isEnabled
-            ? '✅ Forwarding SMS to backend'
-            : '⏸️ Gateway is paused'}
+          {isEnabled
+            ? 'Listening for incoming SMS messages'
+            : 'Auto-reply is paused'}
         </Text>
       </View>
 
@@ -188,10 +147,10 @@ export default function App() {
         <ScrollView style={styles.messagesList}>
           {messages.length === 0 ? (
             <Text style={styles.noMessagesText}>
-              No messages yet. Configure backend and enable gateway to start.
+              No messages yet. Send an SMS to this device to test.
             </Text>
           ) : (
-            messages.map((msg: any, index: any) => (
+            messages.map((msg, index) => (
               <View key={index} style={styles.messageItem}>
                 <Text style={styles.messageFrom}>From: {msg.address}</Text>
                 <Text style={styles.messageBody}>{msg.body}</Text>
@@ -249,38 +208,6 @@ const styles = StyleSheet.create({
   toggleLabel: {
     fontSize: 18,
     color: '#fff',
-    fontWeight: '600',
-  },
-  configContainer: {
-    padding: 20,
-    backgroundColor: '#1f2937',
-    marginHorizontal: 20,
-    marginTop: 20,
-    borderRadius: 10,
-  },
-  configLabel: {
-    fontSize: 14,
-    color: '#9ca3af',
-    marginBottom: 10,
-    fontWeight: '600',
-  },
-  input: {
-    backgroundColor: '#374151',
-    color: '#fff',
-    padding: 12,
-    borderRadius: 8,
-    fontSize: 14,
-    marginBottom: 10,
-  },
-  testButton: {
-    backgroundColor: '#3b82f6',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  testButtonText: {
-    color: '#fff',
-    fontSize: 14,
     fontWeight: '600',
   },
   statusContainer: {

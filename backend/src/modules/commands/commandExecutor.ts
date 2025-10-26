@@ -117,7 +117,7 @@ async function handleBalanceCommand(phoneNumber: string) {
         phoneNumber, 
         wallet: wallet.walletAddress,
         publicKey: wallet.publicKey.slice(0, 20) + "..."
-      }, "✅ [LIT PROTOCOL] PKP WALLET CREATED AND SAVED");
+      }, " [LIT PROTOCOL] PKP WALLET CREATED AND SAVED");
     }
     
     logger.info({ phoneNumber, wallet: wallet.walletAddress }, "🔮 [PYTH NETWORK] Fetching INR/USD price feed...");
@@ -128,11 +128,11 @@ async function handleBalanceCommand(phoneNumber: string) {
       inrUsdPrice, 
       source: "Pyth Hermes API",
       feedId: "INR/USD"
-    }, "✅ [PYTH NETWORK] PRICE FEED FETCHED SUCCESSFULLY");
+    }, " [PYTH NETWORK] PRICE FEED FETCHED SUCCESSFULLY");
     
-    const message = `💰 OfflinePay Wallet\n\n` +
+    const message = ` OfflinePay Wallet\n\n` +
       `🔐 PKP: ${wallet.walletAddress.slice(0, 10)}...${wallet.walletAddress.slice(-8)}\n` +
-      `📊 Balance: 0 PYUSD (~0 INR)\n\n` +
+      ` Balance: 0 PYUSD (~0 INR)\n\n` +
       `📈 Live Rate (Pyth):\n` +
       `1 INR = $${inrUsdPrice.toFixed(4)} USD\n\n` +
       `Non-custodial Lit PKP!\n` +
@@ -146,9 +146,9 @@ async function handleBalanceCommand(phoneNumber: string) {
     } catch (e) {
       // Ignore UI errors
     }
-    logger.info({ phoneNumber }, "✅ BALANCE COMMAND - Complete");
+    logger.info({ phoneNumber }, " BALANCE COMMAND - Complete");
   } catch (error) {
-    logger.error({ err: error, phoneNumber }, "❌ BALANCE COMMAND - Failed");
+    logger.error({ err: error, phoneNumber }, " BALANCE COMMAND - Failed");
     await sendGenericSms(phoneNumber, "Error fetching balance. Please try again.");
     try { 
       storeUIMessage(phoneNumber, "Error fetching balance. Please try again."); 
@@ -162,11 +162,11 @@ async function handleStatusCommand(phoneNumber: string) {
   try {
     const user = await findOrCreateUser(phoneNumber);
     
-    const message = `🚀 OfflinePay Status:\n\n` +
-      `✅ Backend: Online\n` +
-      `✅ Pyth Network: Connected\n` +
-      `✅ Hedera: Live (1100 HBAR)\n` +
-      `✅ Lit Protocol: Ready\n\n` +
+    const message = ` OfflinePay Status:\n\n` +
+      ` Backend: Online\n` +
+      ` Pyth Network: Connected\n` +
+      ` Hedera: Live (1100 HBAR)\n` +
+      ` Lit Protocol: Ready\n\n` +
       `Account:\n` +
       `Phone: ${phoneNumber}\n` +
       `PIN Set: ${user.pinHash ? 'Yes ✓' : 'No ✗'}\n` +

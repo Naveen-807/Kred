@@ -162,15 +162,15 @@ const wrapIIFEInStringPlugin = {
           const mbInDecimal = (bytes / 1_000_000).toFixed(4);
 
           console.log(
-            `✅ ${file.path
+            ` ${file.path
               .split('/')
               .pop()}\n- ${mbInDecimal} MB (in decimal)\n- ${mbInBinary} MB (in binary)`,
           );
         });
       });
-    console.log('✅ Lit actions built successfully');
+    console.log(' Lit actions built successfully');
   } catch (e) {
-    console.error('❌ Error building lit actions: ', e);
+    console.error(' Error building lit actions: ', e);
     process.exit(1);
   }
 })();

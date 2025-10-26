@@ -26,23 +26,23 @@ interface DeploymentManifest {
 }
 
 async function deployAbility() {
-  console.log('🚀 Deploying AaveWithdrawAndSend ability...\n');
+  console.log(' Deploying AaveWithdrawAndSend ability...\n');
 
   // Step 1: Load ability metadata
   console.log('📋 Loading ability metadata...');
   const metadataPath = join(__dirname, '../abilities/ability.json');
   const metadata = JSON.parse(readFileSync(metadataPath, 'utf-8'));
-  console.log(`✅ Loaded: ${metadata.name} v${metadata.version}`);
+  console.log(` Loaded: ${metadata.name} v${metadata.version}`);
 
   // Step 2: Validate ability code
-  console.log('\n🔍 Validating ability code...');
+  console.log('\n Validating ability code...');
   const abilityPath = join(__dirname, '../abilities/AaveWithdrawAndSend.ts');
   const abilityCode = readFileSync(abilityPath, 'utf-8');
   
   if (!abilityCode.includes('aaveWithdrawAndSend')) {
     throw new Error('Ability code validation failed: missing main function');
   }
-  console.log('✅ Ability code validated');
+  console.log(' Ability code validated');
 
   // Step 3: Create deployment manifest
   console.log('\n📦 Creating deployment manifest...');
@@ -59,10 +59,10 @@ async function deployAbility() {
   // Step 4: Save manifest
   const manifestPath = join(__dirname, '../deployment-manifest.json');
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-  console.log(`✅ Manifest saved: ${manifestPath}`);
+  console.log(` Manifest saved: ${manifestPath}`);
 
   // Step 5: Instructions for IPFS deployment
-  console.log('\n📝 NEXT STEPS FOR PRODUCTION DEPLOYMENT:');
+  console.log('\n NEXT STEPS FOR PRODUCTION DEPLOYMENT:');
   console.log('━'.repeat(60));
   console.log('\n1. Upload to IPFS:');
   console.log('   npx ipfs-deploy abilities/AaveWithdrawAndSend.ts');
@@ -77,7 +77,7 @@ async function deployAbility() {
   console.log('\n━'.repeat(60));
 
   // Step 6: Create demo configuration
-  console.log('\n🎯 Creating demo configuration...');
+  console.log('\n Creating demo configuration...');
   const demoConfig = {
     abilityName: metadata.name,
     version: metadata.version,
@@ -99,18 +99,18 @@ async function deployAbility() {
 
   const demoConfigPath = join(__dirname, '../demo-config.json');
   writeFileSync(demoConfigPath, JSON.stringify(demoConfig, null, 2));
-  console.log(`✅ Demo config saved: ${demoConfigPath}`);
+  console.log(` Demo config saved: ${demoConfigPath}`);
 
   // Step 7: Summary
-  console.log('\n🎉 DEPLOYMENT PREPARATION COMPLETE!');
+  console.log('\n DEPLOYMENT PREPARATION COMPLETE!');
   console.log('━'.repeat(60));
-  console.log('\n✅ Ability validated and ready');
-  console.log('✅ Deployment manifest created');
-  console.log('✅ Demo configuration generated');
+  console.log('\n Ability validated and ready');
+  console.log(' Deployment manifest created');
+  console.log(' Demo configuration generated');
   console.log('\n📁 Files created:');
   console.log(`   - ${manifestPath}`);
   console.log(`   - ${demoConfigPath}`);
-  console.log('\n🏆 Ready for Lit Protocol prize submission!');
+  console.log('\n Ready for Lit Protocol prize submission!');
   console.log('━'.repeat(60));
 
   return manifest;
@@ -170,6 +170,6 @@ deployAbility()
     process.exit(0);
   })
   .catch((error) => {
-    console.error('\n❌ Deployment failed:', error.message);
+    console.error('\n Deployment failed:', error.message);
     process.exit(1);
   });
