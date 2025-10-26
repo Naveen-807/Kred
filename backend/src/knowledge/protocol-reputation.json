@@ -1,0 +1,214 @@
+{
+  "protocols": {
+    "aave": {
+      "name": "Aave",
+      "category": "lending",
+      "risk_score": 20,
+      "audited": true,
+      "audit_firms": ["OpenZeppelin", "CertiK"],
+      "tvl_usd": 15000000000,
+      "age_months": 48,
+      "exploits": 0,
+      "description": "Leading lending protocol with strong security track record",
+      "apy_range": "3-8%",
+      "recommended": true,
+      "safety_features": [
+        "Multi-sig governance",
+        "Time-locked upgrades", 
+        "Emergency pause mechanism",
+        "Insurance fund"
+      ]
+    },
+    "compound": {
+      "name": "Compound",
+      "category": "lending", 
+      "risk_score": 25,
+      "audited": true,
+      "audit_firms": ["OpenZeppelin", "Trail of Bits"],
+      "tvl_usd": 8000000000,
+      "age_months": 60,
+      "exploits": 1,
+      "description": "Established lending protocol with good security",
+      "apy_range": "2-6%",
+      "recommended": true,
+      "safety_features": [
+        "Governance token",
+        "Emergency pause",
+        "Multi-sig admin"
+      ]
+    },
+    "uniswap": {
+      "name": "Uniswap",
+      "category": "dex",
+      "risk_score": 30,
+      "audited": true,
+      "audit_firms": ["ConsenSys", "Trail of Bits"],
+      "tvl_usd": 5000000000,
+      "age_months": 36,
+      "exploits": 0,
+      "description": "Leading decentralized exchange",
+      "apy_range": "5-15%",
+      "recommended": true,
+      "safety_features": [
+        "Governance token",
+        "Community controlled",
+        "Battle tested"
+      ]
+    },
+    "curve": {
+      "name": "Curve",
+      "category": "stablecoin_dex",
+      "risk_score": 25,
+      "audited": true,
+      "audit_firms": ["Quantstamp"],
+      "tvl_usd": 3000000000,
+      "age_months": 42,
+      "exploits": 0,
+      "description": "Specialized in stablecoin trading",
+      "apy_range": "2-8%",
+      "recommended": true,
+      "safety_features": [
+        "Governance token",
+        "Multi-sig",
+        "Emergency pause"
+      ]
+    },
+    "yearn": {
+      "name": "Yearn Finance",
+      "category": "yield_aggregator",
+      "risk_score": 40,
+      "audited": true,
+      "audit_firms": ["Trail of Bits"],
+      "tvl_usd": 2000000000,
+      "age_months": 30,
+      "exploits": 1,
+      "description": "Automated yield farming strategies",
+      "apy_range": "8-20%",
+      "recommended": false,
+      "safety_features": [
+        "Governance token",
+        "Multi-sig treasury"
+      ],
+      "risks": [
+        "Complex strategies",
+        "Smart contract risk",
+        "Strategy changes"
+      ]
+    },
+    "sushiswap": {
+      "name": "SushiSwap",
+      "category": "dex",
+      "risk_score": 45,
+      "audited": true,
+      "audit_firms": ["Quantstamp"],
+      "tvl_usd": 1000000000,
+      "age_months": 24,
+      "exploits": 2,
+      "description": "Community-driven DEX fork",
+      "apy_range": "10-25%",
+      "recommended": false,
+      "safety_features": [
+        "Governance token",
+        "Multi-sig"
+      ],
+      "risks": [
+        "Fork of Uniswap",
+        "Higher complexity",
+        "Past exploits"
+      ]
+    },
+    "pancakeswap": {
+      "name": "PancakeSwap",
+      "category": "dex",
+      "risk_score": 50,
+      "audited": true,
+      "audit_firms": ["CertiK"],
+      "tvl_usd": 2000000000,
+      "age_months": 18,
+      "exploits": 1,
+      "description": "BSC-based DEX",
+      "apy_range": "15-50%",
+      "recommended": false,
+      "safety_features": [
+        "Governance token",
+        "Multi-sig"
+      ],
+      "risks": [
+        "BSC network risk",
+        "High APY often unsustainable",
+        "Centralization concerns"
+      ]
+    },
+    "unknown_protocol": {
+      "name": "Unknown Protocol",
+      "category": "unknown",
+      "risk_score": 90,
+      "audited": false,
+      "audit_firms": [],
+      "tvl_usd": 0,
+      "age_months": 0,
+      "exploits": 0,
+      "description": "Protocol not recognized in our database",
+      "apy_range": "unknown",
+      "recommended": false,
+      "safety_features": [],
+      "risks": [
+        "No audit history",
+        "Unknown team",
+        "High risk of scam",
+        "No track record"
+      ]
+    }
+  },
+  "risk_categories": {
+    "very_low": {
+      "score_range": "0-20",
+      "description": "Very safe protocols with strong track records",
+      "recommendation": "Safe for beginners"
+    },
+    "low": {
+      "score_range": "21-40", 
+      "description": "Generally safe protocols with good security",
+      "recommendation": "Safe with caution"
+    },
+    "medium": {
+      "score_range": "41-60",
+      "description": "Moderate risk protocols",
+      "recommendation": "Only for experienced users"
+    },
+    "high": {
+      "score_range": "61-80",
+      "description": "High risk protocols",
+      "recommendation": "Not recommended"
+    },
+    "very_high": {
+      "score_range": "81-100",
+      "description": "Extremely high risk or likely scam",
+      "recommendation": "Avoid completely"
+    }
+  },
+  "red_flags": [
+    "Promises unrealistic returns (>50% APY)",
+    "No audit or fake audit",
+    "Anonymous team",
+    "No governance token",
+    "Centralized control",
+    "Recent exploits",
+    "Low TVL for age",
+    "Copy-paste code",
+    "No insurance fund",
+    "Unclear tokenomics"
+  ],
+  "green_flags": [
+    "Multiple professional audits",
+    "Established team with reputation",
+    "Governance token with community control",
+    "High TVL relative to age",
+    "No major exploits",
+    "Insurance fund",
+    "Emergency pause mechanism",
+    "Time-locked upgrades",
+    "Multi-sig treasury",
+    "Battle-tested code"
+  ]
+}

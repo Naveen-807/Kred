@@ -1,0 +1,111 @@
+{
+  "defi_terms": {
+    "yield_farming": {
+      "simple_explanation": "Yield farming is like putting your money in a high-interest savings account, but for crypto. You lend your PYUSD to earn extra money.",
+      "analogy": "It's like renting out your spare room - you get paid while your money works for you.",
+      "example": "Put 100 PYUSD in yield farming, earn 5 PYUSD extra per month.",
+      "risk_level": "medium",
+      "related_terms": ["liquidity", "APY", "staking"]
+    },
+    "liquidity": {
+      "simple_explanation": "Liquidity means how easily you can turn your crypto back into cash. High liquidity = easy to sell.",
+      "analogy": "Like having money in your wallet vs buried in your backyard.",
+      "example": "PYUSD has high liquidity - you can sell it anytime.",
+      "risk_level": "low",
+      "related_terms": ["yield_farming", "trading"]
+    },
+    "staking": {
+      "simple_explanation": "Staking is like putting your crypto in a locked savings account. You earn rewards but can't withdraw immediately.",
+      "analogy": "Like a fixed deposit at the bank - higher interest but locked for a period.",
+      "example": "Stake 50 PYUSD for 3 months, earn 2 PYUSD bonus.",
+      "risk_level": "medium",
+      "related_terms": ["yield_farming", "rewards"]
+    },
+    "APY": {
+      "simple_explanation": "APY (Annual Percentage Yield) tells you how much extra money you'll earn in a year.",
+      "analogy": "Like the interest rate on your savings account, but for crypto.",
+      "example": "5% APY means 100 PYUSD becomes 105 PYUSD in one year.",
+      "risk_level": "low",
+      "related_terms": ["yield_farming", "staking"]
+    },
+    "defi": {
+      "simple_explanation": "DeFi (Decentralized Finance) is like a digital bank that works without traditional banks.",
+      "analogy": "Like having a bank in your phone that works 24/7 without needing permission.",
+      "example": "Send money, earn interest, get loans - all through your phone.",
+      "risk_level": "medium",
+      "related_terms": ["yield_farming", "staking", "liquidity"]
+    },
+    "smart_contract": {
+      "simple_explanation": "A smart contract is like a digital agreement that automatically executes when conditions are met.",
+      "analogy": "Like a vending machine - put in money, get your item automatically.",
+      "example": "Send 10 PYUSD, smart contract automatically sends it to the recipient.",
+      "risk_level": "low",
+      "related_terms": ["defi", "automation"]
+    },
+    "gas_fee": {
+      "simple_explanation": "Gas fee is like a small transaction fee you pay to use the blockchain network.",
+      "analogy": "Like paying for postage when sending a letter.",
+      "example": "Send 100 PYUSD, pay 0.01 HBAR gas fee.",
+      "risk_level": "low",
+      "related_terms": ["transaction", "blockchain"]
+    },
+    "wallet": {
+      "simple_explanation": "A wallet is like your digital purse that holds your crypto money.",
+      "analogy": "Like your physical wallet but for digital money.",
+      "example": "Your PKP wallet holds your PYUSD safely.",
+      "risk_level": "low",
+      "related_terms": ["private_key", "address"]
+    },
+    "private_key": {
+      "simple_explanation": "A private key is like the password to your digital wallet. Keep it secret!",
+      "analogy": "Like the PIN for your ATM card - never share it.",
+      "example": "Your PKP wallet uses advanced security instead of simple passwords.",
+      "risk_level": "high",
+      "related_terms": ["wallet", "security"]
+    },
+    "blockchain": {
+      "simple_explanation": "Blockchain is like a digital ledger that records all transactions permanently.",
+      "analogy": "Like a notebook that everyone can see but no one can erase.",
+      "example": "All PYUSD transactions are recorded on Hedera blockchain.",
+      "risk_level": "low",
+      "related_terms": ["smart_contract", "transaction"]
+    }
+  },
+  "common_questions": {
+    "how_to_start": {
+      "question": "How do I start using DeFi?",
+      "answer": "Start simple! Send PYUSD to friends, check your balance. Then try yield farming with small amounts.",
+      "steps": [
+        "1. Send PYUSD to test",
+        "2. Check balance regularly", 
+        "3. Try yield farming with 10 PYUSD",
+        "4. Learn more terms with 'What is...'"
+      ]
+    },
+    "is_it_safe": {
+      "question": "Is DeFi safe?",
+      "answer": "DeFi can be safe if you're careful. Start with trusted protocols and small amounts. Never share your private keys!",
+      "safety_tips": [
+        "Start with small amounts",
+        "Use trusted protocols only",
+        "Never share private keys",
+        "Ask 'What is...' before trying new things"
+      ]
+    },
+    "how_to_earn": {
+      "question": "How can I earn money with DeFi?",
+      "answer": "You can earn by yield farming (lending your PYUSD) or staking (locking crypto for rewards). Start small and learn!",
+      "earning_methods": [
+        "Yield farming: Lend PYUSD, earn interest",
+        "Staking: Lock crypto, get rewards",
+        "Set savings goals for automatic earning"
+      ]
+    }
+  },
+  "risk_warnings": {
+    "high_risk": "⚠️ HIGH RISK: This involves significant risk. Only invest what you can afford to lose.",
+    "medium_risk": "⚠️ MEDIUM RISK: This has some risk. Start with small amounts to learn.",
+    "low_risk": "✅ LOW RISK: This is relatively safe for beginners.",
+    "scam_warning": "🚨 SCAM ALERT: Never share your private keys or send money to unknown addresses!"
+  }
+}
