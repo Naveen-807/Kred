@@ -5,10 +5,11 @@
  */
 
 import { Router } from 'express';
+import { smsQueue } from "../modules/sms-queue/index.js";
 
 const router = Router();
 
-// Simple in-memory queue for outgoing messages
+// Simple in-memory queue for outgoing messages (keeping for backward compatibility)
 const outgoingQueue: Array<{ id: string; to: string; body: string }> = [];
 let messageIdCounter = 0;
 
@@ -53,7 +54,7 @@ router.post('/incoming', async (req, res) => {
       responseMessage = 'Unknown command. Send HELP for available commands.';
     }
     
-    // Add response to outgoing queue
+    // Add response to outgoing queue (backward compatibility)
     const msgId = `msg_${Date.now()}_${++messageIdCounter}`;
     outgoingQueue.push({
       id: msgId,
@@ -61,7 +62,11 @@ router.post('/incoming', async (req, res) => {
       body: responseMessage
     });
     
+    // Also add to proper SMS queue for actual SMS sending
+    const gatewayMsgId = smsQueue.addMessage(from, responseMessage, 'normal');
+    
     console.log(`📤 Queued response message ${msgId} to ${from}`);
+    console.log(`📤 Also queued for gateway: ${gatewayMsgId}`);
     
     res.json({
       status: 'ok',

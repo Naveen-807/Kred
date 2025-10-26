@@ -24,6 +24,16 @@
         "android.permission.READ_PHONE_STATE"
       ]
     },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ],
     "extra": {
       "eas": {
         "projectId": "bf7278d4-295e-4193-8805-2b92fe6c5091"

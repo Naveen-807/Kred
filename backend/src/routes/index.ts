@@ -1,22 +1,21 @@
 import type { Express } from "express";
 
-import { smsRouter } from "./sms.js";
-import { statusRouter } from "./status.js";
-import { voiceRouter } from "./voice.js";
 import { smsGatewayRouter } from "./sms-gateway.js";
 import smsSimpleRouter from "./sms-simple.js";
+import smsMobileAPIRouter from "./smsmobileapi.js";
 
 export function registerRoutes(app: Express) {
   app.get("/health", (_req, res) => {
     res.json({ status: "ok" });
   });
 
-  // Simple SMS Gateway (No Twilio/Vonage needed!)
+  // SMS Mobile API - Core functionality
   app.use("/", smsSimpleRouter);  // This includes /incoming and /outgoing
   
-  app.use("/webhook/sms", smsRouter);
+  // SMSMobileAPI Webhook (for Android 15 SMS gateway - India only +91)
+  app.use("/sms", smsMobileAPIRouter);  // Includes /sms/webhook
+  
+  // SMS Gateway management routes
   app.use("/webhook", smsGatewayRouter);  // SMS Gateway routes
   app.use("/api/gateway", smsGatewayRouter);  // Gateway management
-  app.use("/webhook/status", statusRouter);
-  app.use("/webhook/voice", voiceRouter);
 }

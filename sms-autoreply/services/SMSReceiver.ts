@@ -1,4 +1,4 @@
-import { Alert, PermissionsAndroid, Platform, DeviceEventEmitter } from 'react-native';
+import { Alert, PermissionsAndroid, Platform, DeviceEventEmitter, Linking } from 'react-native';
 import { debugLogger } from './DebugLogger';
 import SmsAndroid from 'react-native-get-sms-android';
 
@@ -118,6 +118,45 @@ export class SMSReceiver {
       console.log('Please manually open Settings > Apps > SMS Auto-Reply > Permissions');
     } catch (error) {
       debugLogger.error('PERMISSION', 'Failed to open app settings', error);
+    }
+  }
+
+  async requestDefaultSmsApp(): Promise<boolean> {
+    try {
+      if (Platform.OS === 'android') {
+        debugLogger.info('PERMISSION', 'Requesting default SMS app status...');
+        
+        // For Android 15+, we need to open settings to set as default SMS app
+        // This is typically handled by the system when the app registers for SMS intents
+        Alert.alert(
+          'Set as Default SMS App',
+          'To enable automatic SMS processing on Android 15, please set this app as your default SMS handler.\n\n' +
+          'Android will open the settings dialog.',
+          [
+            { 
+              text: 'Cancel', 
+              style: 'cancel' 
+            },
+            { 
+              text: 'Open Settings', 
+              onPress: async () => {
+                try {
+                  await Linking.openSettings();
+                  debugLogger.info('PERMISSION', 'Opened app settings');
+                } catch (error) {
+                  debugLogger.error('PERMISSION', 'Failed to open settings', error);
+                }
+              }
+            }
+          ]
+        );
+        
+        return true;
+      }
+      return false;
+    } catch (error) {
+      debugLogger.error('PERMISSION', 'Failed to request default SMS app', error);
+      return false;
     }
   }
 

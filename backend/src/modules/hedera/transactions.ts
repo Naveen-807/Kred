@@ -12,6 +12,7 @@ import {
 import { ethers } from "ethers";
 import { config } from "../../config/index.js";
 import { logger } from "../../utils/logger.js";
+import { isDemoMode } from "../../utils/mode.js";
 
 let hederaClient: Client | null = null;
 
@@ -81,10 +82,14 @@ export async function executeHbarTransfer(
     // Convert EVM address to Hedera Account ID if needed
     let recipientId: AccountId;
     if (recipientAddress.startsWith("0x")) {
-      // For EVM addresses, we need to convert or use contract call
-      // For now, use the operator account as recipient for demo
-      recipientId = AccountId.fromString(config.hedera.operatorId);
-      logger.warn("Using operator account as recipient for EVM address demo");
+      if (isDemoMode()) {
+        // For EVM addresses, we need to convert or use contract call
+        // For now, use the operator account as recipient for demo
+        recipientId = AccountId.fromString(config.hedera.operatorId);
+        logger.warn("Demo mode: using operator account as recipient for EVM address");
+      } else {
+        throw new Error("Recipient EVM address not supported without mapping. Provide a Hedera account ID.");
+      }
     } else {
       recipientId = AccountId.fromString(recipientAddress);
     }

@@ -6,19 +6,6 @@ export const config = {
   env: process.env.NODE_ENV ?? "development",
   port: parseInt(process.env.PORT ?? "8080", 10),
   mongoUri: process.env.MONGO_URI ?? "mongodb://localhost:27017/offlinepay",
-  sms: {
-    msg91: {
-      authKey: process.env.MSG91_AUTH_KEY ?? "",
-      senderId: process.env.MSG91_SENDER_ID ?? "OFFPAY",
-      route: process.env.MSG91_ROUTE ?? "4",
-      countryCode: process.env.MSG91_COUNTRY_CODE ?? "91"
-    }
-  },
-  twilio: {
-    accountSid: process.env.TWILIO_ACCOUNT_SID ?? "",
-    authToken: process.env.TWILIO_AUTH_TOKEN ?? "",
-    phoneNumber: process.env.TWILIO_PHONE_NUMBER ?? ""
-  },
   vincent: {
     appId: process.env.VINCENT_APP_ID ?? "",
     abilityIds: {

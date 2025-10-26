@@ -33,6 +33,11 @@ export default function App() {
     setPermissionGranted(granted);
     setInitialized(true);
     debugLogger.success('APP', `Initialization complete. Permissions: ${granted}`);
+    
+    // Request to set as default SMS app for Android 15+ compatibility
+    if (granted) {
+      await smsReceiver.requestDefaultSmsApp();
+    }
   };
 
   const testBackendConnection = async () => {
