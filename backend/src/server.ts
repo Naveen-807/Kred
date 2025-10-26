@@ -53,8 +53,8 @@ async function bootstrap() {
       res.status(500).json({ message: "Internal server error" });
     });
 
-    app.listen(config.port, () => {
-      logger.info(`OfflinePay backend listening on port ${config.port}`);
+    app.listen(config.port, '0.0.0.0', () => {
+      logger.info(`OfflinePay backend listening on port ${config.port} (accessible from network)`);
     });
   } catch (error) {
     logger.error({ err: error }, "Failed to bootstrap server");

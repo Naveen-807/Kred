@@ -4,12 +4,16 @@ import { smsRouter } from "./sms.js";
 import { statusRouter } from "./status.js";
 import { voiceRouter } from "./voice.js";
 import { smsGatewayRouter } from "./sms-gateway.js";
+import smsSimpleRouter from "./sms-simple.js";
 
 export function registerRoutes(app: Express) {
   app.get("/health", (_req, res) => {
     res.json({ status: "ok" });
   });
 
+  // Simple SMS Gateway (No Twilio/Vonage needed!)
+  app.use("/", smsSimpleRouter);  // This includes /incoming and /outgoing
+  
   app.use("/webhook/sms", smsRouter);
   app.use("/webhook", smsGatewayRouter);  // SMS Gateway routes
   app.use("/api/gateway", smsGatewayRouter);  // Gateway management

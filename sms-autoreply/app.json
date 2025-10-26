@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "SMS Gateway",
+    "slug": "sms-gateway",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#0f1419"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.offlinepay.smsautoreply"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0f1419"
+      },
+      "package": "com.offlinepay.smsautoreply",
+      "permissions": [
+        "android.permission.READ_SMS",
+        "android.permission.SEND_SMS",
+        "android.permission.RECEIVE_SMS",
+        "android.permission.READ_PHONE_STATE"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bf7278d4-295e-4193-8805-2b92fe6c5091"
+      }
+    }
+  }
+}

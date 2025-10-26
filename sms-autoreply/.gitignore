@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.expo/
+.expo-shared/
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build
+dist/
+build/
+*.apk
+*.aab
+*.ipa
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Misc
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
