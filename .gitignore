@@ -8,13 +8,13 @@ build/
 
 # Environment files
 *.env
-*.env.local
-*.env.development
-*.env.production
-backend/.env
-backend/env.example
-contracts/.env
-ai-agent/.env
+*.env.*
+.env*
+backend/.env*
+contracts/.env*
+ai-agent/.env*
+vincent-ability/.env*
+sms-autoreply/.env*
 
 # Logs
 *.log
