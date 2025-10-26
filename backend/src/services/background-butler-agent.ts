@@ -298,10 +298,10 @@ export class BackgroundButlerAgent {
 
     // Extract recipient phone (should be different from sender)
     if (!recipientPhone) {
-      for (const phoneMatch of phoneMatches) {
-        if (phoneMatch !== phone) { // Not the sender's phone
-          recipientPhone = phoneMatch;
-          break;
+    for (const phoneMatch of phoneMatches) {
+      if (phoneMatch !== phone) { // Not the sender's phone
+        recipientPhone = phoneMatch;
+        break;
         }
       }
     }
