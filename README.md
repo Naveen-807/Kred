@@ -1,6 +1,6 @@
 # 🏆 OfflinePay - DeFi for the Unbanked via SMS
 
-> **Category-Killer Hackathon Project** | Bring DeFi to 1 billion underbanked people, one SMS at a time
+Bring DeFi to 1 billion underbanked people, one SMS at a time
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Hedera](https://img.shields.io/badge/Built%20on-Hedera-1C1C1E?logo=hedera)](https://hedera.com)
@@ -16,7 +16,7 @@ Transform access to financial services for the world's 1 billion underbanked peo
 
 ## ✨ Our Solution
 
-OfflinePay is the **first DeFi platform accessible entirely via SMS**. Users can:
+OfflinePay is the **DeFi platform accessible entirely via SMS**. Users can:
 
 - 💸 **Send money** instantly, even offline
 - 💰 **Save & invest** with automated financial planning
@@ -25,15 +25,113 @@ OfflinePay is the **first DeFi platform accessible entirely via SMS**. Users can
 - 📊 **Build credit** with privacy-preserving financial passports
 - 💍 **Insure assets** with automated parametric insurance
 - 🎓 **Own content** with pay-as-you-go streaming
-
 **All accessible via simple SMS commands.**
+
+Trigger Layer	SMS-based initiation from any phone
+Gateway Layer	Android device using SMSMobileAPI to forward SMS to backend
+Backend Layer	Flask/Node.js server with ASI Multi-Agent System
+AI Layer (ASI)	Butler + Oracle agents handle validation, logic, and transaction safety
+Blockchain Layer	Executes PYUSD transfers & SBT minting on Hedera Hashgraph
+Response Layer	Sends back confirmation SMS to user
+
+
 
 ---
 
-## 🚀 The 12 Winning Features
+📲 Project Flow — “From SMS Trigger to On-Chain Execution”
+
+1️⃣ User Sends SMS
+
+User types:
+
+PAY 50 TO @adarsh
+
+Sent to your registered OfflinePay Kred number.
+
+
+
+---
+
+2️⃣ Gateway (SMSMobileAPI)
+
+SMS received by your gateway Android phone (with internet).
+
+App instantly sends the SMS as a webhook (HTTP POST) to your backend server.
+
+
+
+---
+
+3️⃣ Backend (Flask/Node.js)
+
+Parses incoming SMS.
+
+Extracts action → PAY
+
+Amount → 50
+
+Recipient → @adarsh
+
+Triggers ASI Multi-Agent System.
+
+
+
+---
+
+4️⃣ 🤖 ASI Multi-Agent System
+
+Agents coordinate in real-time:
+
+Agent	Role
+
+Butler Agent	Understands user intent & coordinates all agents
+Risk Oracle Agent	Validates transaction safety & previous records
+Gas Oracle Agent	Checks HBAR/gas balance
+Strategy Oracle Agent	Optimizes Hedera route
+Executor Agent	Prepares final transaction payload
+
+
+
+---
+
+5️⃣ 🔐 Lit Protocol – PKP Signing
+
+The Executor Agent sends the final transaction to Lit Protocol.
+
+Lit uses Programmable Key Pair (PKP) for secure signing.
+
+Your private key never leaves the secure enclave.
+
+
+
+---
+
+6️⃣ 💰 On-Chain Execution (Hedera + PYUSD + SBT)
+
+PYUSD stablecoin is transferred from sender → receiver.
+
+Upon success, an SBT (SoulBound Token) is minted to the sender.
+
+Acts as a credit/reputation badge (e.g., “5 successful offline payments = Credit Level 1”).
+
+
+
+
+---
+
+7️⃣ 📤 Confirmation SMS
+
+Backend sends response SMS via SMSMobileAPI send endpoint:
+
+✅ Transaction Successful  
+₹50 sent to @adarsh  
+TXN: 0x98ab23... confirmed on Hedera
+
+
+---
 
 ### Category A: Autonomous Financial Institution
-*Targeting PayPal Grand Prize & ASI 1st Place*
+
 
 #### 1. 🔐 Proof of Solvency Identity Agent
 Create verifiable financial identity without revealing specific transactions using Merkle trees.
@@ -47,7 +145,6 @@ System: "✅ Financial passport created!
 ```
 
 #### 2. 🏛️ Micro-Venture DAO Agent
-SMS-based community funding with voting and automatic execution.
 
 ```
 User: "PROPOSE: Fund 'Water Pump' for 500 PYUSD"
@@ -127,7 +224,7 @@ System: "Processing payment to +919876543210..."
 ```
 
 ### Category C: Unstoppable Offline Protocol
-*Targeting Overall Innovation*
+
 
 #### 9. 🔌 State Channel Agent
 True offline payments without blockchain interaction.
@@ -320,26 +417,8 @@ Sync
 ```bash
 # Run backend tests
 cd backend
-pnpm test
-
-# Run comprehensive integration tests
-pnpm test:comprehensive
-
-# Use SMS simulator (web-based, no SMS needed)
-# Visit: http://localhost:8080/web/sms-simulator.html
+pnpm testl
 ```
-
----
-
-## 🏆 Hackathon Prize Alignment
-
-| Prize Category | Features | Why We Win |
-|----------------|----------|------------|
-| **PayPal Grand Prize** | #1, #2, #3, #4 | Transformative PYUSD use cases with massive real-world impact |
-| **ASI 1st Place** | #5, #6 | Ultimate structured reasoning and human-agent interaction |
-| **ASI 4th Place** | #10 | Innovative multi-agent collaboration |
-| **ASI 5th Place** | #7, #8 | Polished UX and conversational AI |
-| **Overall Innovation** | #9, #11, #12 | Technical excellence with offline capabilities |
 
 ---
 
@@ -412,23 +491,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **ASI/Fetch.ai** for AI agent capabilities
 - **Lit Protocol** for decentralized wallet management
 - **Pyth Network** for price feeds and entropy
-- **Twilio** for SMS gateway
 
----
 
-## 📞 Contact
+--
 
-- **Project**: [OfflinePay](https://github.com/yourusername/OfflinePay)
-- **Demo**: [Live Demo](https://offlinepay.demo.com)
-- **Email**: team@offlinepay.com
-- **Twitter**: [@OfflinePay](https://twitter.com/offlinepay)
 
----
-
-<div align="center">
 
 **Built for financial inclusion. Bringing DeFi to 1 billion people, one SMS at a time.** 🚀
 
 Made with ❤️ by the OfflinePay team
 
-</div>
